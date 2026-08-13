@@ -7,6 +7,8 @@ const PATHS = {
   moon: '<path d="M20.5 13.5A8.5 8.5 0 1 1 10.5 3.5a7 7 0 0 0 10 10Z"/>',
   instagram: '<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="0.6" fill="currentColor" stroke="none"/>',
   chevronDown: '<path d="M6 9.5l6 6 6-6"/>',
+  chevronLeft: '<path d="M14.5 6l-6 6 6 6"/>',
+  chevronRight: '<path d="M9.5 6l6 6-6 6"/>',
   plus: '<path d="M12 5v14M5 12h14"/>',
   pencil: '<path d="M16.5 3.5l4 4L8 20l-5 1 1-5L16.5 3.5Z"/><path d="M14.5 5.5l4 4"/>',
   trash: '<path d="M4 7h16M10 11v6M14 11v6"/><path d="M6.5 7l.8 13h9.4l.8-13M9 7V4.5h6V7"/>',

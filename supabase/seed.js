@@ -76,6 +76,7 @@ async function main() {
       price: 1500,
       description: 'Add a description in the admin panel.',
       image_url: imageUrl,
+      gallery: [imageUrl],
       is_posted: false,
     });
 

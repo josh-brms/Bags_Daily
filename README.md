@@ -13,11 +13,12 @@ installment plans, dark/light mode, and a password-protected admin panel.
 |---|---|
 | Pink gradient hero + brand marquee | Login (Supabase Auth) |
 | Product gallery with brand badges & filters | Add / edit / delete products |
-| **Order Now** → opens your Instagram | Upload product photos |
+| **Swipeable photos** (Shopee-style color gallery) | Upload several photos per product |
 | Installment prices (₱+200, split 3 or 6 months) | Toggle "Posted" items |
 | **Recently Posted** section | Edit shop name, tagline, about, rules, IG link |
-| Shop rules & about sections | Dark/light theme everywhere |
-| Dark mode / light mode toggle | Fully mobile-friendly |
+| **Order Now** → opens your Instagram | Dark/light theme everywhere |
+| Shop rules & about sections | Fully mobile-friendly |
+| Dark mode / light mode toggle | |
 
 **Installment formula:** `installment price = original + ₱200`
 → 3-month: `÷ 3` per month · 6-month: `÷ 6` per month

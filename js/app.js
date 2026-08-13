@@ -66,13 +66,35 @@ function installmentChipsHtml(price) {
 }
 
 function cardHtml(p) {
+  const gallery = p.gallery && p.gallery.length
+    ? p.gallery
+    : p.image_url
+      ? [p.image_url]
+      : [];
+  const slides = gallery.map((u) => `
+      <div class="swiper-slide">
+        <img src="${u}" alt="${escapeHtml(p.name)}" loading="lazy"
+             onerror="this.src='https://placehold.co/600x600/ffe1ec/c9186b?text=Bag%27s+Daily'">
+      </div>`).join('');
+  const multi = gallery.length > 1;
+  const dots = multi
+    ? `<div class="swiper-dots">${gallery.map((g, i) => `<span class="dot${i === 0 ? ' on' : ''}"></span>`).join('')}</div>`
+    : '';
+  const arrows = multi
+    ? `<button class="swiper-arrow prev" aria-label="Previous photo" type="button">${icon('chevronLeft')}</button>
+       <button class="swiper-arrow next" aria-label="Next photo" type="button">${icon('chevronRight')}</button>`
+    : '';
+
   return `
     <article class="product-card reveal visible" data-brand="${(p.brand || '').toLowerCase()}">
       <div class="card-img">
         ${p.brand ? `<span class="badge">${escapeHtml(p.brand)}</span>` : ''}
         ${p.is_posted ? `<span class="posted-flag">${icon('pin', { klass: 'svg-icon sm' })} Posted</span>` : ''}
-        <img src="${p.image_url}" alt="${escapeHtml(p.name)}" loading="lazy"
-             onerror="this.src='https://placehold.co/600x600/ffe1ec/c9186b?text=Bag%27s+Daily'">
+        <div class="swiper" data-swiper>
+          <div class="swiper-track">${slides}</div>
+          ${arrows}
+          ${dots}
+        </div>
       </div>
       <div class="card-body">
         ${p.brand ? `<span class="card-brand">${escapeHtml(p.brand)}</span>` : ''}
@@ -106,6 +128,58 @@ function renderGrid() {
     return;
   }
   grid.innerHTML = filtered.map(cardHtml).join('');
+  setupSwipers();
+}
+
+/* ---------- Shopee-style photo swiper ---------- */
+function setupSwipers() {
+  document.querySelectorAll('.swiper[data-swiper]').forEach((s) => {
+    if (s.dataset.ready) return;
+    s.dataset.ready = '1';
+
+    const track = s.querySelector('.swiper-track');
+    if (!track || track.children.length < 2) return;
+
+    const dots = [...s.querySelectorAll('.dot')];
+    const prev = s.querySelector('.swiper-arrow.prev');
+    const next = s.querySelector('.swiper-arrow.next');
+
+    const update = () => {
+      const total = dots.length;
+      const i = Math.min(Math.max(total - 1, 0), Math.round(track.scrollLeft / track.clientWidth));
+      dots.forEach((d, k) => d.classList.toggle('on', k === i));
+    };
+
+    let raf = null;
+    track.addEventListener('scroll', () => {
+      if (!raf) raf = requestAnimationFrame(() => { raf = null; update(); });
+    });
+
+    prev && prev.addEventListener('click', () => track.scrollBy({ left: -track.clientWidth, behavior: 'smooth' }));
+    next && next.addEventListener('click', () => track.scrollBy({ left: track.clientWidth, behavior: 'smooth' }));
+
+    let down = false, moved = false, startX = 0, startLeft = 0;
+    track.addEventListener('pointerdown', (e) => {
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      down = true; moved = false;
+      startX = e.clientX; startLeft = track.scrollLeft;
+      try { track.setPointerCapture(e.pointerId); } catch {}
+    });
+    track.addEventListener('pointermove', (e) => {
+      if (!down) return;
+      const dx = e.clientX - startX;
+      if (Math.abs(dx) > 6) { moved = true; s.classList.add('dragging'); }
+      if (moved) track.scrollLeft = startLeft - dx;
+    });
+    const endDrag = () => {
+      down = false;
+      if (moved) { moved = false; s.classList.remove('dragging'); }
+    };
+    track.addEventListener('pointerup', endDrag);
+    track.addEventListener('pointercancel', endDrag);
+
+    setTimeout(update, 350);
+  });
 }
 
 function renderPosted() {

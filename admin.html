@@ -92,18 +92,15 @@
                 <div class="hint">Installment = price + ₱200, split over 3 or 6 months</div>
               </div>
               <div class="form-group">
-                <label for="pImage">Photo</label>
-                <div class="file-input-row">
-                  <img class="file-preview" id="pPreview" src="https://placehold.co/74x74/ffe1ec/c9186b?text=Bag" alt="preview">
-                  <input type="file" id="pImageFile" accept="image/*" style="flex:1;min-width:180px">
+                <label for="pImageFiles">Photos <span class="hint">(first photo = cover)</span></label>
+                <div class="gallery-manager" id="galleryManager"></div>
+                <input type="file" id="pImageFiles" accept="image/*" multiple style="margin-bottom:8px">
+                <div class="url-add-row">
+                  <input type="text" id="pImageUrl" placeholder="Or paste an image link…">
+                  <button type="button" class="btn btn-small" id="addUrlBtn">Add link</button>
                 </div>
-                <div class="hint">Upload a new photo, or paste a link below</div>
+                <div class="hint">Customers swipe through the photos on the site — like Shopee. Add different colors!</div>
               </div>
-            </div>
-
-            <div class="form-group">
-              <label for="pImageUrl">Or image link</label>
-              <input type="text" id="pImageUrl" placeholder="https://…">
             </div>
 
             <div class="form-group">

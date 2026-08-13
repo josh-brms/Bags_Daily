@@ -11,6 +11,7 @@ create table if not exists public.products (
   price numeric not null default 0,
   description text not null default '',
   image_url text not null default '',
+  gallery text[] not null default '{}',
   is_posted boolean not null default false,
   sort_order int not null default 0,
   created_at timestamptz not null default now()

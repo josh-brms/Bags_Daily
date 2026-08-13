@@ -83,6 +83,8 @@ async function uploadImage(file) {
 
 /* ---------- Products ---------- */
 let allProducts = [];
+let editingGallery = [];
+let pendingFiles = [];
 
 function renderProducts() {
   const list = el('productList');
@@ -133,12 +135,13 @@ async function saveProduct(e) {
   err.style.display = 'none';
 
   const id = el('productId').value;
-  let imageUrl = el('pImageUrl').value.trim();
+  const gallery = [...editingGallery];
 
   try {
-    const file = el('pImageFile').files[0];
-    if (file) imageUrl = await uploadImage(file);
-    if (!imageUrl) throw new Error('Please add a photo (upload a file or paste a link).');
+    for (const file of pendingFiles) {
+      gallery.push(await uploadImage(file));
+    }
+    if (!gallery.length) throw new Error('Please add at least one photo.');
 
     const payload = {
       name: el('pName').value.trim(),
@@ -146,7 +149,8 @@ async function saveProduct(e) {
       price: parseFloat(el('pPrice').value),
       description: el('pDesc').value.trim(),
       is_posted: el('pPosted').checked,
-      image_url: imageUrl,
+      image_url: gallery[0],
+      gallery,
     };
 
     let error;
@@ -179,9 +183,13 @@ function startEdit(id) {
   el('pPrice').value = p.price;
   el('pDesc').value = p.description || '';
   el('pPosted').checked = !!p.is_posted;
-  el('pImageUrl').value = p.image_url;
-  el('pPreview').src = p.image_url;
-  el('pImageFile').value = '';
+  editingGallery = p.gallery && p.gallery.length
+    ? [...p.gallery]
+    : p.image_url
+      ? [p.image_url]
+      : [];
+  pendingFiles = [];
+  renderGalleryManager();
   el('formTitle').innerHTML = `${icon('pencil')} Edit Product`;
   el('saveBtn').innerHTML = `${icon('save')} Update Product`;
   el('cancelEditBtn').hidden = false;
@@ -191,10 +199,27 @@ function startEdit(id) {
 function resetForm() {
   el('productForm').reset();
   el('productId').value = '';
-  el('pPreview').src = 'https://placehold.co/74x74/ffe1ec/c9186b?text=Bag';
+  editingGallery = [];
+  pendingFiles = [];
+  renderGalleryManager();
   el('formTitle').textContent = 'Add Product';
   el('saveBtn').innerHTML = `${icon('save')} Save Product`;
   el('cancelEditBtn').hidden = true;
+}
+
+/* ---------- Gallery manager ---------- */
+function renderGalleryManager() {
+  const mg = el('galleryManager');
+  const thumbs = editingGallery.map((u, i) => `
+    <div class="gallery-thumb">
+      <img src="${u}" alt="" onerror="this.src='https://placehold.co/74x74/ffe1ec/c9186b?text=Bag'">
+      ${i === 0 ? '<span class="cover-tag">Cover</span>' : ''}
+      <button type="button" class="gthumb-rm" data-i="${i}" aria-label="Remove photo">×</button>
+    </div>`).join('');
+  const pending = pendingFiles.length
+    ? `<div class="gallery-thumb pending"><span class="pending-num">+${pendingFiles.length}</span></div>`
+    : '';
+  mg.innerHTML = (thumbs + pending) || '<span class="gallery-empty-hint">No photos yet — add some below.</span>';
 }
 
 async function deleteProduct(id) {
@@ -286,12 +311,31 @@ function bind() {
   el('settingsForm').addEventListener('submit', saveSettings);
   el('cancelEditBtn').addEventListener('click', resetForm);
 
-  el('pImageFile').addEventListener('change', () => {
-    const f = el('pImageFile').files[0];
-    if (f) el('pPreview').src = URL.createObjectURL(f);
+  el('galleryManager').addEventListener('click', (e) => {
+    const rm = e.target.closest('.gthumb-rm');
+    if (!rm) return;
+    editingGallery.splice(Number(rm.dataset.i), 1);
+    renderGalleryManager();
   });
-  el('pImageUrl').addEventListener('input', () => {
-    if (el('pImageUrl').value.trim()) el('pPreview').src = el('pImageUrl').value.trim();
+
+  el('addUrlBtn').addEventListener('click', () => {
+    const v = el('pImageUrl').value.trim();
+    if (!v) return;
+    editingGallery.push(v);
+    el('pImageUrl').value = '';
+    renderGalleryManager();
+  });
+
+  el('pImageUrl').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      el('addUrlBtn').click();
+    }
+  });
+
+  el('pImageFiles').addEventListener('change', () => {
+    for (const f of el('pImageFiles').files) pendingFiles.push(f);
+    renderGalleryManager();
   });
 
   document.querySelectorAll('.tab-btn').forEach((btn) =>
