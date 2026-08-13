@@ -5,6 +5,10 @@
 --  Then retry adding a product in the admin panel.
 -- ============================================================
 
+-- ---------- 0. Make sure the gallery column exists (migration) ----------
+alter table public.products
+  add column if not exists gallery text[] not null default '{}';
+
 -- ---------- 1. Make sure security is enabled ----------
 alter table public.products enable row level security;
 alter table public.settings enable row level security;

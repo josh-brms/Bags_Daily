@@ -62,6 +62,45 @@ function enterDashboard(user) {
   document.querySelector('.admin-head h1').innerHTML =
     `${icon('user')} Welcome, ${escapeHtml(user.email)}`;
   loadAll();
+  runDiagnose();
+}
+
+/* ---------- Diagnose ---------- */
+async function runDiagnose() {
+  const panel = el('diagPanel');
+  const box = el('diagContent');
+  panel.hidden = false;
+  box.innerHTML = '<p class="diag-hint">Checking your setup…</p>';
+
+  try {
+    const { data, error } = await supabase.rpc('check_shop');
+    if (error) throw error;
+    const d = data || {};
+    const items = [
+      ['Signed in as admin', d.is_authenticated === true,
+        d.is_authenticated ? `Session role: ${d.current_role}` : `You are viewing as "${d.current_role}" — log out and log back in`],
+      ['Products table policies', d.products_policies >= 2,
+        `${d.products_policies} found (need 2) — run supabase/fix-rls.sql`],
+      ['Settings table policies', d.settings_policies >= 2,
+        `${d.settings_policies} found (need 2) — run supabase/fix-rls.sql`],
+      ['Photo storage bucket', d.bucket_exists === true,
+        d.bucket_exists ? (d.bucket_public ? 'exists (public)' : 'exists but NOT public — run supabase/fix-rls.sql') : 'missing — run supabase/fix-rls.sql'],
+      ['Storage upload policies', d.storage_object_policies >= 3,
+        `${d.storage_object_policies} found (need 3) — run supabase/fix-rls.sql`],
+      ['Gallery column (multiple photos)', d.has_gallery_column === true,
+        d.has_gallery_column ? 'ready' : 'missing — run supabase/fix-rls.sql (includes it)'],
+      ['Products in store', d.product_count > 0,
+        d.product_count ? `${d.product_count} product(s) live on the site` : 'none yet — add your first product below'],
+    ];
+    box.innerHTML = items.map(([label, ok, detail]) => `
+      <div class="diag-item ${ok ? 'ok' : 'bad'}">
+        <span class="diag-dot">${ok ? '✓' : '✗'}</span>
+        <div class="diag-text"><strong>${label}</strong><br><small>${escapeHtml(detail)}</small></div>
+      </div>`).join('');
+  } catch (err) {
+    box.innerHTML = `<p class="diag-bad-text">Could not diagnose: ${escapeHtml(err.message || String(err))}<br>
+      Run <code>supabase/diagnose.sql</code> in the Supabase SQL Editor once, then click Diagnose again.</p>`;
+  }
 }
 
 async function logout() {
@@ -307,6 +346,7 @@ function bind() {
   });
 
   el('logoutBtn').addEventListener('click', logout);
+  el('diagBtn').addEventListener('click', runDiagnose);
   el('productForm').addEventListener('submit', saveProduct);
   el('settingsForm').addEventListener('submit', saveSettings);
   el('cancelEditBtn').addEventListener('click', resetForm);
