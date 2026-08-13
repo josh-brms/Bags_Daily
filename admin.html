@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <title>Admin — Bag's Daily</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23ff4d8d'/%3E%3Crect x='16' y='27' width='32' height='24' rx='5' fill='none' stroke='white' stroke-width='4'/%3E%3Cpath d='M23 27v-4a9 9 0 0 1 18 0v4' fill='none' stroke='white' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="admin-body">
+
+  <!-- ===== Header ===== -->
+  <header class="site-header admin-header">
+    <div class="header-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5.5 8h13l1 12.5a1.5 1.5 0 0 1-1.5 1.5H6a1.5 1.5 0 0 1-1.5-1.5L5.5 8Z"/><path d="M8.5 8V6.75a3.5 3.5 0 0 1 7 0V8"/></svg></span>
+        <span>Bag's <span>Daily</span> — Admin</span>
+      </a>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme"><svg class="svg-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 13.5A8.5 8.5 0 1 1 10.5 3.5a7 7 0 0 0 10 10Z"/></svg></button>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ===== Login ===== -->
+    <div class="admin-login" id="loginCard">
+      <div class="login-icon"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></div>
+      <h1>Admin Login</h1>
+      <p>Sign in to manage your shop</p>
+      <div class="form-error" id="loginError"></div>
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="loginEmail">Email</label>
+          <input type="email" id="loginEmail" placeholder="you@example.com" required>
+        </div>
+        <div class="form-group">
+          <label for="loginPassword">Password</label>
+          <input type="password" id="loginPassword" placeholder="••••••••" required>
+        </div>
+        <button type="submit" class="btn btn-primary" id="loginBtn">Sign In</button>
+      </form>
+    </div>
+
+    <!-- ===== Dashboard ===== -->
+    <div class="admin-dashboard" id="dashboard" style="display:none">
+      <div class="admin-head">
+        <h1 id="adminWelcome"><span class="head-icon"><svg class="svg-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="3.8"/><path d="M4.5 20.5a7.5 7.5 0 0 1 15 0"/></svg></span> Shop Manager</h1>
+        <div class="admin-head-actions">
+          <a class="btn btn-small" href="index.html" target="_blank" rel="noopener">View Store <svg class="svg-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.5 17.5L17.5 6.5M17.5 6.5H9M17.5 6.5v8.5"/></svg></a>
+          <button class="btn btn-small btn-danger" id="logoutBtn">Log Out</button>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="products"><svg class="svg-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8h12l1 13H5l1-13Z"/><path d="M9 11V6.5a3 3 0 0 1 6 0V11"/></svg> Products</button>
+        <button class="tab-btn" data-tab="settings"><svg class="svg-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v3M12 18.2v3M2.8 12h3M18.2 12h3M5.5 5.5l2.1 2.1M16.4 16.4l2.1 2.1M18.5 5.5l-2.1 2.1M7.6 16.4l-2.1 2.1"/></svg> Settings</button>
+      </div>
+
+      <!-- Products tab -->
+      <div class="tab-panel active" id="tab-products">
+
+        <div class="admin-panel">
+          <h2 id="formTitle"><svg class="svg-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg> Add Product</h2>
+          <div class="form-error" id="productError"></div>
+          <form id="productForm">
+            <input type="hidden" id="productId">
+
+            <div class="admin-grid-2">
+              <div class="form-group">
+                <label for="pName">Product Name *</label>
+                <input type="text" id="pName" placeholder="e.g. Coach Tabby Shoulder Bag" required>
+              </div>
+              <div class="form-group">
+                <label for="pBrand">Brand</label>
+                <input type="text" id="pBrand" list="brandList" placeholder="Coach, Lacoste, Lululemon…">
+                <datalist id="brandList">
+                  <option value="Coach"><option value="Christy NG"><option value="Lacoste">
+                  <option value="ALO"><option value="Lululemon"><option value="Tory Burch">
+                  <option value="Longchamp"><option value="Charles &amp; Keith">
+                </datalist>
+              </div>
+            </div>
+
+            <div class="admin-grid-2">
+              <div class="form-group">
+                <label for="pPrice">Price (₱) *</label>
+                <input type="number" id="pPrice" min="0" step="1" placeholder="1600" required>
+                <div class="hint">Installment = price + ₱200, split over 3 or 6 months</div>
+              </div>
+              <div class="form-group">
+                <label for="pImage">Photo</label>
+                <div class="file-input-row">
+                  <img class="file-preview" id="pPreview" src="https://placehold.co/74x74/ffe1ec/c9186b?text=Bag" alt="preview">
+                  <input type="file" id="pImageFile" accept="image/*" style="flex:1;min-width:180px">
+                </div>
+                <div class="hint">Upload a new photo, or paste a link below</div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="pImageUrl">Or image link</label>
+              <input type="text" id="pImageUrl" placeholder="https://…">
+            </div>
+
+            <div class="form-group">
+              <label for="pDesc">Description</label>
+              <textarea id="pDesc" placeholder="Condition, size, extras…"></textarea>
+            </div>
+
+            <label class="checkbox-row">
+              <input type="checkbox" id="pPosted">
+              <svg class="svg-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-6.5-5.7-6.5-10.5a6.5 6.5 0 0 1 13 0C18.5 15.3 12 21 12 21Z"/><circle cx="12" cy="10.5" r="2.3"/></svg>
+              Mark as <em>Posted</em> (appears in the "Recently Posted" section)
+            </label>
+
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+              <button type="submit" class="btn btn-primary" style="width:auto" id="saveBtn"><svg class="svg-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v11m0 0l-4-4m4 4l4-4"/><path d="M4 17v2.5A1.5 1.5 0 0 0 5.5 21h13a1.5 1.5 0 0 0 1.5-1.5V17"/></svg> Save Product</button>
+              <button type="button" class="btn btn-ghost" style="width:auto" id="cancelEditBtn" hidden>Cancel edit</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="admin-panel">
+          <h2><svg class="svg-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8h12l1 13H5l1-13Z"/><path d="M9 11V6.5a3 3 0 0 1 6 0V11"/></svg> Your Products <span id="productCount"></span></h2>
+          <div class="admin-list" id="productList"></div>
+        </div>
+      </div>
+
+      <!-- Settings tab -->
+      <div class="tab-panel" id="tab-settings">
+        <div class="admin-panel">
+          <h2><svg class="svg-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v3M12 18.2v3M2.8 12h3M18.2 12h3M5.5 5.5l2.1 2.1M16.4 16.4l2.1 2.1M18.5 5.5l-2.1 2.1M7.6 16.4l-2.1 2.1"/></svg> Shop Settings</h2>
+          <div class="form-error" id="settingsError"></div>
+          <form id="settingsForm">
+            <div class="admin-grid-2">
+              <div class="form-group">
+                <label for="sName">Shop Name</label>
+                <input type="text" id="sName" placeholder="Bag's Daily">
+              </div>
+              <div class="form-group">
+                <label for="sInstagram">Instagram Link</label>
+                <input type="text" id="sInstagram" placeholder="https://www.instagram.com/…">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="sTagline">Tagline</label>
+              <input type="text" id="sTagline" placeholder="Authentic brand bags at friendly prices">
+            </div>
+            <div class="form-group">
+              <label for="sDescription">Shop Description (About section)</label>
+              <textarea id="sDescription" placeholder="Tell customers about your shop…"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="sRules">Shop Rules (one per line)</label>
+              <textarea id="sRules" placeholder="Friendly negotiation only.
+Payment is GCash / bank transfer.
+Reserve via Instagram DM — first come, first served."></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width:auto"><svg class="svg-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v11m0 0l-4-4m4 4l4-4"/><path d="M4 17v2.5A1.5 1.5 0 0 0 5.5 21h13a1.5 1.5 0 0 0 1.5-1.5V17"/></svg> Save Settings</button>
+          </form>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <script src="js/config.js"></script>
+  <script type="module" src="js/admin.js"></script>
+</body>
+</html>
