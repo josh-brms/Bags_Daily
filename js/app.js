@@ -211,7 +211,7 @@ function renderPosted() {
 function renderSettings() {
   if (!settings) return;
   document.title = `${settings.shop_name || 'Bag\'s Daily'} — Shop`;
-  el('logoText').innerHTML = `${escapeHtml(settings.shop_name || 'Bag\'s Daily')} <span>Daily</span>`;
+  el('logoText').innerHTML = escapeHtml(settings.shop_name || 'Bag\'s Daily').replace('Daily', '<span>Daily</span>');
   el('heroTitle').innerHTML = `${escapeHtml(settings.shop_name || 'Bag\'s Daily').replace('Daily', '<em>Daily</em>')}`;
   el('heroTagline').textContent = settings.tagline || '';
   el('aboutText').textContent = settings.shop_description || '';
