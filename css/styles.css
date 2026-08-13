@@ -181,6 +181,8 @@ section[id], .hero { scroll-margin-top: 76px; }
   border: none;
   cursor: pointer;
   padding: 6px;
+  z-index: 102;
+  position: relative;
 }
 
 .hamburger span {
@@ -1166,28 +1168,35 @@ h1, h2, h3, h4, .logo, .section-title, .card-name, .price, .btn, .chip,
 /* ============ Responsive ============ */
 @media (max-width: 860px) {
   .nav-links {
-    position: fixed;
-    top: 0;
-    right: -100%;
-    width: 260px;
-    height: 100vh;
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 14px;
+    width: 230px;
+    max-height: calc(100vh - 96px);
+    overflow-y: auto;
     background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
     flex-direction: column;
     justify-content: flex-start;
-    align-items: flex-start;
-    padding: 90px 24px 24px;
-    gap: 16px;
-    box-shadow: -10px 0 40px rgba(0, 0, 0, 0.15);
-    transition: right 0.35s ease;
-    z-index: 99;
+    align-items: stretch;
+    padding: 10px;
+    gap: 2px;
+    box-shadow: var(--shadow-hover);
+    z-index: 101;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: opacity 0.28s ease, transform 0.28s ease, visibility 0.28s;
   }
 
-  .nav-links.open { right: 0; }
+  .nav-links.open { opacity: 1; visibility: visible; transform: translateY(0); }
 
   .nav-links a {
-    font-size: 1.05rem;
-    padding: 10px 16px;
+    font-size: 1rem;
+    padding: 11px 14px;
     width: 100%;
+    border-radius: var(--radius-sm);
   }
 
   .hamburger { display: flex; }
