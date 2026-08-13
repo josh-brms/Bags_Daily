@@ -9,6 +9,7 @@ let supabase = null;
 let products = [];
 let settings = null;
 let activeBrand = 'All';
+let lastSwipeEnd = 0;
 
 const el = (id) => document.getElementById(id);
 
@@ -86,7 +87,7 @@ function cardHtml(p) {
     : '';
 
   return `
-    <article class="product-card reveal visible" data-brand="${(p.brand || '').toLowerCase()}">
+    <article class="product-card reveal visible" data-id="${p.id}" data-brand="${(p.brand || '').toLowerCase()}">
       <div class="card-img">
         ${p.brand ? `<span class="badge">${escapeHtml(p.brand)}</span>` : ''}
         ${p.is_posted ? `<span class="posted-flag">${icon('pin', { klass: 'svg-icon sm' })} Posted</span>` : ''}
@@ -173,7 +174,7 @@ function setupSwipers() {
     });
     const endDrag = () => {
       down = false;
-      if (moved) { moved = false; s.classList.remove('dragging'); }
+      if (moved) { moved = false; s.classList.remove('dragging'); lastSwipeEnd = Date.now(); }
     };
     track.addEventListener('pointerup', endDrag);
     track.addEventListener('pointercancel', endDrag);
@@ -191,7 +192,7 @@ function renderPosted() {
   }
   strip.innerHTML = posted.map(
     (p) => `
-      <article class="mini-card">
+      <article class="mini-card" data-id="${p.id}">
         <img src="${p.image_url}" alt="${escapeHtml(p.name)}" loading="lazy"
              onerror="this.src='https://placehold.co/600x600/ffe1ec/c9186b?text=Bag%27s+Daily'">
         <div class="mini-body">
@@ -282,6 +283,83 @@ function bindEvents() {
   });
 }
 
+/* ---------- Product detail modal ---------- */
+function openModal(id) {
+  const p = products.find((x) => x.id === id);
+  if (!p) return;
+
+  const gallery = p.gallery && p.gallery.length
+    ? p.gallery
+    : p.image_url
+      ? [p.image_url]
+      : [];
+  const slides = gallery.map((u) => `
+      <div class="swiper-slide">
+        <img src="${u}" alt="${escapeHtml(p.name)}" loading="lazy"
+             onerror="this.src='https://placehold.co/600x600/ffe1ec/c9186b?text=Bag%27s+Daily'">
+      </div>`).join('');
+  const multi = gallery.length > 1;
+  const dots = multi
+    ? `<div class="swiper-dots">${gallery.map((g, i) => `<span class="dot${i === 0 ? ' on' : ''}"></span>`).join('')}</div>`
+    : '';
+  const arrows = multi
+    ? `<button class="swiper-arrow prev" aria-label="Previous photo" type="button">${icon('chevronLeft')}</button>
+       <button class="swiper-arrow next" aria-label="Next photo" type="button">${icon('chevronRight')}</button>`
+    : '';
+
+  el('modalGallery').innerHTML = `
+    <div class="swiper" data-swiper>
+      <div class="swiper-track">${slides}</div>
+      ${arrows}
+      ${dots}
+    </div>`;
+
+  el('mBrand').hidden = !p.brand;
+  el('mBrand').textContent = p.brand || '';
+  el('mPosted').hidden = !p.is_posted;
+  el('mName').textContent = p.name;
+  el('mPrice').textContent = formatPeso(p.price);
+  el('mInstNote').textContent = `or ${formatPeso(installmentPrice(p.price))} on installment`;
+  el('mChips').innerHTML = installmentChipsHtml(p.price);
+  el('mDesc').textContent = p.description || 'Contact us on Instagram for more details about this item.';
+  el('mDesc').hidden = !p.description;
+  el('mOrder').href = settings?.instagram_url || DEFAULT_IG;
+
+  el('productModal').hidden = false;
+  document.body.classList.add('modal-open');
+  setupSwipers();
+}
+
+function closeModal() {
+  el('productModal').hidden = true;
+  document.body.classList.remove('modal-open');
+}
+
+/* ---------- Table clicks ---------- */
+function bindCardClicks() {
+  el('productGrid').addEventListener('click', (e) => {
+    if (Date.now() - lastSwipeEnd < 350) return;
+    if (e.target.closest('.order-btn')) return;
+    const card = e.target.closest('.product-card');
+    if (card) openModal(card.dataset.id);
+  });
+
+  el('postedStrip').addEventListener('click', (e) => {
+    if (Date.now() - lastSwipeEnd < 350) return;
+    if (e.target.closest('.mini-order')) return;
+    const card = e.target.closest('.mini-card');
+    if (card) openModal(card.dataset.id);
+  });
+
+  el('modalClose').addEventListener('click', closeModal);
+  el('productModal').addEventListener('click', (e) => {
+    if (e.target === el('productModal')) closeModal();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !el('productModal').hidden) closeModal();
+  });
+}
+
 /* ---------- Reveal on scroll ---------- */
 function setupReveal() {
   const io = new IntersectionObserver(
@@ -303,6 +381,7 @@ function init() {
   initTheme();
   setupNav();
   bindEvents();
+  bindCardClicks();
   setupReveal();
   updateBrandMarquee();
 
