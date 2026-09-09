@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import { motion } from 'framer-motion'
 import { ArrowLeft } from 'lucide-react'
 import ColorPicker from '@/components/shop/ColorPicker'
 import SizePicker from '@/components/shop/SizePicker'
@@ -35,6 +36,7 @@ function ProductDetail({ productId }: { productId: number }) {
   const [color, setColor] = useState(product.colors[0].name)
   const [size, setSize] = useState(product.sizes[0])
   const related = relatedProducts(product)
+  const selectedColorHex = (product.colors.find(c => c.name === color) ?? product.colors[0]).hex
 
   return (
     <div className="container-cy pb-20">
@@ -47,14 +49,25 @@ function ProductDetail({ productId }: { productId: number }) {
       </Link>
 
       <div className="grid items-start gap-10 lg:grid-cols-[1.1fr_1fr] lg:gap-14">
-        <div className="glass glass-ring glass-sheen aspect-[4/5] overflow-hidden rounded-lg bg-white/40">
-          <img
-            src={productImage(product)}
-            alt={`${product.name} from the CY Studio collection`}
-            width={1600}
-            height={2000}
-            className="h-full w-full object-cover"
+        <div className="relative">
+          <motion.div
+            aria-hidden="true"
+            data-testid="color-glow"
+            className="absolute inset-4 rounded-lg blur-3xl"
+            style={{ opacity: 0.3 }}
+            initial={false}
+            animate={{ backgroundColor: selectedColorHex }}
+            transition={{ duration: 0.6, ease: 'easeOut' }}
           />
+          <div className="glass glass-ring glass-sheen relative aspect-[4/5] overflow-hidden rounded-lg bg-white/40">
+            <img
+              src={productImage(product)}
+              alt={`${product.name} from the CY Studio collection`}
+              width={1600}
+              height={2000}
+              className="h-full w-full object-cover"
+            />
+          </div>
         </div>
 
         <div className="glass glass-ring glass-sheen rounded-lg p-6 md:p-8 lg:sticky lg:top-24">

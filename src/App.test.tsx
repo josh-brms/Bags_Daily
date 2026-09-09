@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
 import App from './App'
 
@@ -18,10 +19,18 @@ describe('App routes', () => {
     expect(screen.getAllByRole('link', { name: /View Item \d+/ }).length).toBe(12)
   })
 
-  it('renders a product detail page', () => {
+  it('renders a product detail page', async () => {
+    const user = userEvent.setup()
     renderAt('/product/3')
     expect(screen.getByRole('heading', { level: 1, name: 'Item 003' })).toBeInTheDocument()
     expect(screen.getAllByText('₱1,300').length).toBeGreaterThan(0)
+    const glow = screen.getByTestId('color-glow')
+    expect(glow.style.backgroundColor).toMatch(/240,\s*224,\s*224/)
+    await user.click(screen.getByRole('radio', { name: 'Amber' }))
+    await waitFor(
+      () => expect(glow.style.backgroundColor).toMatch(/242,\s*180,\s*92/),
+      { timeout: 2000 }
+    )
   })
 
   it('renders the not-found state for an invalid product id', () => {

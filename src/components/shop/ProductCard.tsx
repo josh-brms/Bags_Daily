@@ -7,7 +7,7 @@ import { peso } from '@/lib/peso'
 
 export default function ProductCard({ product }: { product: Product }) {
   return (
-    <motion.li variants={fadeUp}>
+    <motion.li layout variants={fadeUp}>
       <TiltCard>
         <Link
           to={`/product/${product.id}`}

@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom'
-import { Mail } from 'lucide-react'
+import { ArrowUp, Mail } from 'lucide-react'
+import { useReducedMotion } from 'framer-motion'
 import BrandMark from './BrandMark'
+import { Button } from '@/components/ui/button'
 
 const explore = [
   { to: '/#shop', label: 'Shop' },
@@ -75,10 +77,26 @@ export default function Footer() {
       </div>
 
       <div className="border-t border-white/50 py-5 text-[0.85rem] text-muted">
-        <div className="container-cy">
-          {new Date().getFullYear()} CY Studio. All rights reserved.
+        <div className="container-cy flex items-center justify-between gap-4">
+          <span>{new Date().getFullYear()} CY Studio. All rights reserved.</span>
+          <BackToTop />
         </div>
       </div>
     </footer>
+  )
+}
+
+function BackToTop() {
+  const reduced = useReducedMotion()
+  const toTop = () => window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' })
+  return (
+    <Button
+      variant="glass"
+      onClick={toTop}
+      aria-label="Back to top"
+      className="rounded-pill border border-white/50 px-3"
+    >
+      <ArrowUp aria-hidden="true" />
+    </Button>
   )
 }

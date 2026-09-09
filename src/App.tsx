@@ -6,6 +6,7 @@ import Lenis from 'lenis'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import CustomCursor from '@/components/layout/CustomCursor'
+import ScrollProgress from '@/components/layout/ScrollProgress'
 import AmbientScene from '@/components/three/AmbientScene'
 import Home from '@/pages/Home'
 import Product from '@/pages/Product'
@@ -46,6 +47,7 @@ export default function App() {
     <MotionConfig reducedMotion="user">
       <ScrollManager />
       <CustomCursor />
+      <ScrollProgress />
       <AmbientScene />
       <a href="#main" className="skip-link">
         Skip to content
