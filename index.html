@@ -1,143 +1,179 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Bag's Daily — Authentic brand bags at great prices. Coach, Lacoste, Lululemon, Tory Burch and more. 3-6 month installment plans available!">
-  <meta name="theme-color" content="#ff4d8d">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23ff4d8d'/%3E%3Cpath d='M20 26h24l2 24a4 4 0 0 1-4 4H22a4 4 0 0 1-4-4l2-24Z' fill='none' stroke='white' stroke-width='4' stroke-linejoin='round'/%3E%3Cpath d='M25 26v-3a7 7 0 0 1 14 0v3' fill='none' stroke='white' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
-  <title>Bag's Daily — Shop</title>
-  <link rel="stylesheet" href="css/styles.css">
+  <title>CY Studio — The Collection</title>
+  <meta name="description" content="CY Studio is an independent studio in Naga City, Philippines offering a small, considered collection of everyday pieces in warm neutral tones.">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="stylesheet" href="style.css">
+  <script src="products.js" defer></script>
 </head>
 <body>
+  <a class="skip-link" href="#main">Skip to content</a>
 
-  <!-- ===== Header ===== -->
   <header class="site-header">
-    <div class="header-inner">
-      <a href="#top" class="logo">
-        <span class="logo-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5.5 8h13l1 12.5a1.5 1.5 0 0 1-1.5 1.5H6a1.5 1.5 0 0 1-1.5-1.5L5.5 8Z"/><path d="M8.5 8V6.75a3.5 3.5 0 0 1 7 0V8"/></svg></span>
-        <span id="logoText">Bag's <span>Daily</span></span>
+    <div class="container header-inner">
+      <a href="index.html" class="brand" aria-label="CY Studio — home">
+        <svg class="brand-mark" viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="18" cy="18" r="15.5" stroke-width="1.5"/>
+          <path d="M11.5 10.5 L18 19 L24.5 10.5"/>
+          <path d="M18 19 V26"/>
+        </svg>
+        <span class="brand-word">CY Studio</span>
       </a>
-
-      <nav>
-        <ul class="nav-links" id="navMenu">
-          <li><a href="#about">About</a></li>
-          <li><a href="#shop">Shop</a></li>
-          <li><a href="#posted">Posted</a></li>
-          <li><a href="#rules">Rules</a></li>
-        </ul>
+      <nav class="nav" id="nav" aria-label="Main">
+        <a href="#home" aria-current="page">Home</a>
+        <a href="#shop">Shop</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+        <button class="nav-close" id="navClose" type="button" aria-label="Close menu">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <path d="M6 6 L18 18 M18 6 L6 18"/>
+          </svg>
+        </button>
       </nav>
-
-      <button class="hamburger" id="hamburger" aria-label="Menu">
-        <span></span><span></span><span></span>
+      <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="nav" aria-label="Open menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <path d="M4 7 H20 M4 12 H20 M4 17 H20"/>
+        </svg>
       </button>
-
-      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme"><svg class="svg-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 13.5A8.5 8.5 0 1 1 10.5 3.5a7 7 0 0 0 10 10Z"/></svg></button>
     </div>
   </header>
 
-  <main id="top">
-
-    <!-- ===== Hero ===== -->
-    <section class="hero">
-      <div class="hero-inner">
-        <span class="hero-bag"><svg width="84" height="84" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5.5 8h13l1 12.5a1.5 1.5 0 0 1-1.5 1.5H6a1.5 1.5 0 0 1-1.5-1.5L5.5 8Z"/><path d="M8.5 8V6.75a3.5 3.5 0 0 1 7 0V8"/></svg></span>
-        <h1 id="heroTitle">Bag's <em>Daily</em></h1>
-        <p id="heroTagline">Authentic brand bags, stylish and affordable — yours today, paid your way.</p>
-        <a class="hero-cta" href="#shop"><svg class="svg-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8h12l1 13H5l1-13Z"/><path d="M9 11V6.5a3 3 0 0 1 6 0V11"/></svg> Shop the Gallery</a>
-      </div>
-      <div class="hero-scroll"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9.5l6 6 6-6"/></svg></div>
-    </section>
-
-    <!-- ===== Brand marquee ===== -->
-    <div class="marquee" aria-hidden="true">
-      <div class="marquee-track" id="marqueeTrack"></div>
-    </div>
-
-    <!-- ===== About / description ===== -->
-    <section id="about">
-      <div class="container">
-        <h2 class="section-title">About the Shop</h2>
-        <p class="section-sub">Your daily dose of designer bags</p>
-        <div class="about-card reveal">
-          <p id="aboutText">Welcome to Bag's Daily! We curate authentic branded bags and accessories at friendly prices. Flexible installment plans make your dream bag within reach.</p>
+  <main id="main">
+    <section id="home" class="hero">
+      <div class="container hero-inner">
+        <div class="hero-media">
+          <img src="images/cy64_SPi.jpg" alt="A piece from the CY Studio collection, photographed in warm neutral light" width="1600" height="2000">
+        </div>
+        <div class="hero-copy reveal">
+          <h1>The Collection</h1>
+          <p>Twelve everyday pieces in warm neutral tones. Browse the store, open a piece, and see its description, price, and colours.</p>
+          <a href="#shop" class="btn">Browse the collection</a>
         </div>
       </div>
     </section>
 
-    <!-- ===== Shop / gallery ===== -->
-    <section id="shop">
+    <section id="shop" class="section">
       <div class="container">
-        <h2 class="section-title">Browse the Gallery</h2>
-        <p class="section-sub">Every item available on 3-month or 6-month installment 💕</p>
-
-        <div class="filters" id="brandFilters"></div>
-
-        <div class="product-grid" id="productGrid">
-          <div class="loading-state empty-state"><span class="icon-big"><svg class="svg-icon" width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5.5 8h13l1 12.5a1.5 1.5 0 0 1-1.5 1.5H6a1.5 1.5 0 0 1-1.5-1.5L5.5 8Z"/><path d="M8.5 8V6.75a3.5 3.5 0 0 1 7 0V8"/></svg></span>Loading the goodies…</div>
-        </div>
+        <h2 class="section-title reveal">All products</h2>
+        <ul class="grid" id="productGrid"></ul>
+        <noscript><p style="text-align:center;color:var(--muted)">Enable JavaScript to view the product list.</p></noscript>
       </div>
     </section>
 
-    <!-- ===== Posted items ===== -->
-    <section id="posted" class="posted-section">
-      <div class="container">
-        <h2 class="section-title">Recently Posted</h2>
-        <p class="section-sub">Fresh drops from our socials — grab them fast!</p>
-        <div class="posted-strip" id="postedStrip"></div>
-      </div>
+    <section class="band" aria-label="Collection scene">
+      <img src="images/BatqNRTa.jpg" alt="Pieces from the collection arranged together in the studio" width="2000" height="875" loading="lazy">
     </section>
 
-    <!-- ===== Shop rules ===== -->
-    <section id="rules">
+    <section id="about" class="section section-about">
       <div class="container">
-        <h2 class="section-title">Shop Rules</h2>
-        <p class="section-sub">A few simple things to keep every deal sweet</p>
-        <div class="rules-grid" id="rulesGrid"></div>
+        <h2 class="section-title reveal">About</h2>
+        <p class="reveal">The collection is a study in warm neutral tones — every piece made to be worn, layered, and lived in. Open any product to see its price, description, and available colours.</p>
       </div>
     </section>
-
   </main>
 
-  <!-- ===== Footer ===== -->
-  <footer class="site-footer">
-    <div class="logo"><span class="logo-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5.5 8h13l1 12.5a1.5 1.5 0 0 1-1.5 1.5H6a1.5 1.5 0 0 1-1.5-1.5L5.5 8Z"/><path d="M8.5 8V6.75a3.5 3.5 0 0 1 7 0V8"/></svg></span> Bag's <span>Daily</span></div>
-    <p>© <span id="year"></span> Bag's Daily. All rights reserved.</p>
-    <a class="footer-ig" data-ig-link href="#" target="_blank" rel="noopener"><svg class="svg-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="0.6" fill="currentColor" stroke="none"/></svg> Order on Instagram</a>
-  </footer>
-
-  <!-- Floating Instagram button (mobile) -->
-  <a class="ig-fab" data-ig-link href="#" target="_blank" rel="noopener" aria-label="Order on Instagram"><svg class="svg-icon" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="0.6" fill="currentColor" stroke="none"/></svg></a>
-
-  <!-- ===== Product detail modal ===== -->
-  <div class="modal-overlay" id="productModal" hidden>
-    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="mName">
-      <button class="modal-close" id="modalClose" type="button" aria-label="Close">&times;</button>
-      <div class="modal-gallery" id="modalGallery"></div>
-      <div class="modal-body">
-        <div class="modal-meta">
-          <span class="card-brand" id="mBrand" hidden></span>
-          <span class="modal-posted" id="mPosted" hidden>Posted</span>
-        </div>
-        <h3 class="modal-name" id="mName"></h3>
-        <div class="price-row">
-          <span class="price" id="mPrice"></span>
-          <span class="installment-note" id="mInstNote"></span>
-        </div>
-        <div class="installment-chips" id="mChips"></div>
-        <p class="modal-desc" id="mDesc"></p>
-        <a class="order-btn" id="mOrder" href="#" target="_blank" rel="noopener">
-          <svg class="svg-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8h12l1 13H5l1-13Z"/><path d="M9 11V6.5a3 3 0 0 1 6 0V11"/></svg>
-          Order Now
+  <footer id="contact" class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-block">
+        <a href="index.html" class="brand" aria-label="CY Studio — home">
+          <svg class="brand-mark" viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="18" cy="18" r="15.5" stroke-width="1.5"/>
+            <path d="M11.5 10.5 L18 19 L24.5 10.5"/>
+            <path d="M18 19 V26"/>
+          </svg>
+          <span class="brand-word">CY Studio</span>
+        </a>
+        <p class="footer-note">New pieces, restocks, and notes from the studio.</p>
+      </div>
+      <div class="footer-block">
+        <h3>Contact</h3>
+        <address>
+          CY Studio<br>
+          Naga City, Camarines Sur<br>
+          Philippines
+        </address>
+        <a class="footer-mail" href="mailto:hello@cy.studio">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="5" width="18" height="14" rx="2"/>
+            <path d="M3 7 L12 13 L21 7"/>
+          </svg>
+          hello@cy.studio
         </a>
       </div>
+      <div class="footer-block">
+        <h3>Explore</h3>
+        <a href="#shop">Shop</a>
+        <a href="#about">About</a>
+        <a href="#home">Home</a>
+      </div>
+      <div class="footer-block">
+        <h3>Legal</h3>
+        <a href="privacy.html">Privacy policy</a>
+        <a href="terms.html">Terms and conditions</a>
+        <a href="refund.html">Refund policy</a>
+        <a href="cookies.html">Cookie policy</a>
+      </div>
     </div>
-  </div>
+    <div class="footer-bottom">
+      <div class="container"><span id="year">2026</span> CY Studio. All rights reserved.</div>
+    </div>
+  </footer>
 
-  <script src="js/config.js"></script>
-  <script type="module" src="js/app.js"></script>
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    const peso = n => '\u20B1' + n.toLocaleString('en-PH');
+    const grid = document.getElementById('productGrid');
+
+    PRODUCTS.forEach(p => {
+      const li = document.createElement('li');
+      li.className = 'reveal';
+      li.innerHTML = `
+        <a class="card" href="product.html?id=${p.id}" aria-label="View ${p.name}, ${peso(p.price)}">
+          <div class="card-media">
+            <img src="${p.image}" alt="${p.name} from the CY Studio collection" width="800" height="1000" loading="lazy">
+          </div>
+          <div class="card-meta">
+            <span class="card-name">${p.name}</span>
+            <span class="card-price">${peso(p.price)}</span>
+          </div>
+        </a>`;
+      grid.appendChild(li);
+    });
+
+    document.body.classList.add('js-reveal');
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+    const nav = document.getElementById('nav');
+    const toggle = document.getElementById('navToggle');
+    const closeBtn = document.getElementById('navClose');
+
+    function openNav() {
+      nav.classList.add('open');
+      toggle.setAttribute('aria-expanded', 'true');
+      closeBtn.focus();
+    }
+    function closeNav(returnFocus) {
+      nav.classList.remove('open');
+      toggle.setAttribute('aria-expanded', 'false');
+      if (returnFocus) toggle.focus();
+    }
+    toggle.addEventListener('click', () => {
+      nav.classList.contains('open') ? closeNav(true) : openNav();
+    });
+    closeBtn.addEventListener('click', () => closeNav(true));
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && nav.classList.contains('open')) closeNav(true);
+    });
+    nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => closeNav(false)));
+  </script>
 </body>
 </html>
