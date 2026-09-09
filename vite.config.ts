@@ -4,7 +4,7 @@ import path from 'node:path'
 
 export default defineConfig({
   plugins: [react()],
-  base: '/Bags_Daily/',
+  base: process.env.VERCEL === '1' ? '/' : '/Bags_Daily/',
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src')
