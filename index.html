@@ -10,6 +10,19 @@
   </head>
   <body>
     <div id="root"></div>
+    <script>
+      window.setTimeout(function () {
+        var root = document.getElementById('root')
+        if (root && root.childElementCount === 0) {
+          document.body.innerHTML =
+            '<div style="font-family:sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:#FAF8F6;color:#211D1B;padding:24px">' +
+            '<h1 style="font-size:1.3rem;font-weight:600;margin:0 0 12px">This page did not load</h1>' +
+            '<p style="color:#6E645F;margin:0 0 24px;max-width:34ch">The site was updated recently and your browser is showing a saved copy.</p>' +
+            '<button onclick="location.reload()" style="font:inherit;font-size:0.9rem;background:#211D1B;color:#FAF8F6;border:0;border-radius:6px;padding:12px 22px;cursor:pointer">Refresh the page</button>' +
+            '</div>'
+        }
+      }, 4000)
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

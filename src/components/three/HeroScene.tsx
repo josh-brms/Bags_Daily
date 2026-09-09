@@ -1,5 +1,6 @@
 import React, { Suspense, useState } from 'react'
 import { useReducedMotion } from 'framer-motion'
+import HeroErrorBoundary from './HeroErrorBoundary'
 
 function hasWebGL(): boolean {
   try {
@@ -36,9 +37,11 @@ export default function HeroScene() {
 
   return (
     <div className="absolute inset-0" aria-hidden="true">
-      <Suspense fallback={<HeroFallback />}>
-        <HeroCanvas />
-      </Suspense>
+      <HeroErrorBoundary fallback={<HeroFallback />}>
+        <Suspense fallback={<HeroFallback />}>
+          <HeroCanvas />
+        </Suspense>
+      </HeroErrorBoundary>
     </div>
   )
 }
