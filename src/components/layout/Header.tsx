@@ -39,7 +39,7 @@ export default function Header() {
   }, [open])
 
   return (
-    <header className="sticky top-0 z-50 border-b border-line bg-cream/90 backdrop-blur-md">
+    <header className="glass-strong sticky top-0 z-50 border-b border-white/50">
       <div className="container-cy flex min-h-[68px] items-center justify-between gap-6">
         <BrandMark />
 
@@ -101,7 +101,7 @@ export default function Header() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.25 }}
-              className="fixed inset-0 z-[60] flex flex-col items-center justify-center gap-8 bg-cream md:hidden"
+              className="fixed inset-0 z-[60] flex flex-col items-center justify-center gap-8 bg-cream/55 backdrop-blur-2xl md:hidden"
               role="dialog"
               aria-modal="true"
               aria-label="Menu"

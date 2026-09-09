@@ -42,6 +42,44 @@
     @apply mx-auto max-w-6xl px-6;
   }
 
+  .glass {
+    background: rgba(255, 255, 255, 0.42);
+    -webkit-backdrop-filter: blur(18px) saturate(150%);
+    backdrop-filter: blur(18px) saturate(150%);
+    box-shadow: 0 8px 32px rgba(33, 29, 27, 0.08);
+  }
+
+  .glass-strong {
+    background: rgba(255, 255, 255, 0.58);
+    -webkit-backdrop-filter: blur(24px) saturate(160%);
+    backdrop-filter: blur(24px) saturate(160%);
+    box-shadow: 0 8px 32px rgba(33, 29, 27, 0.1);
+  }
+
+  .glass-dark {
+    background: rgba(33, 29, 27, 0.72);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    backdrop-filter: blur(16px) saturate(140%);
+  }
+
+  .glass-ring {
+    border: 1px solid rgba(255, 255, 255, 0.55);
+  }
+
+  .glass-sheen {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .glass-sheen::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.5) 0%, transparent 38%);
+  }
+
   .skip-link {
     @apply absolute left-4 top-[-64px] z-[100] rounded-md bg-ink px-4 py-2.5 text-sm text-cream transition-[top] duration-200 focus:top-3;
   }
@@ -71,6 +109,18 @@
 
   .legal-prose li {
     @apply mb-1.5;
+  }
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass {
+    background: rgba(255, 255, 255, 0.84);
+  }
+  .glass-strong {
+    background: rgba(255, 255, 255, 0.94);
+  }
+  .glass-dark {
+    background: rgba(33, 29, 27, 0.96);
   }
 }
 

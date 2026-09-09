@@ -6,6 +6,7 @@ import Lenis from 'lenis'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import CustomCursor from '@/components/layout/CustomCursor'
+import AmbientScene from '@/components/three/AmbientScene'
 import Home from '@/pages/Home'
 import Product from '@/pages/Product'
 import Privacy from '@/pages/legal/Privacy'
@@ -45,6 +46,7 @@ export default function App() {
     <MotionConfig reducedMotion="user">
       <ScrollManager />
       <CustomCursor />
+      <AmbientScene />
       <a href="#main" className="skip-link">
         Skip to content
       </a>
@@ -58,6 +60,7 @@ export default function App() {
           initial="initial"
           animate="enter"
           exit="exit"
+          className="relative z-10"
         >
           <Routes location={location}>
             <Route path="/" element={<Home />} />
@@ -71,15 +74,20 @@ export default function App() {
         </motion.main>
       </AnimatePresence>
 
-      <Footer />
+      <div className="relative z-10">
+        <Footer />
+      </div>
       <Toaster
         position="bottom-center"
         toastOptions={{
           style: {
-            background: '#211D1B',
+            background: 'rgba(33, 29, 27, 0.72)',
+            backdropFilter: 'blur(16px) saturate(140%)',
+            WebkitBackdropFilter: 'blur(16px) saturate(140%)',
             color: '#FAF8F6',
             borderRadius: '999px',
-            border: 'none'
+            border: '1px solid rgba(255, 255, 255, 0.16)',
+            boxShadow: '0 8px 32px rgba(33, 29, 27, 0.18)'
           }
         }}
       />

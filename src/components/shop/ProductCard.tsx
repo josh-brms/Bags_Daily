@@ -12,9 +12,9 @@ export default function ProductCard({ product }: { product: Product }) {
         <Link
           to={`/product/${product.id}`}
           aria-label={`View ${product.name}, ${peso(product.price)}`}
-          className="block overflow-hidden rounded-md border border-line bg-surface no-underline transition-[border-color,box-shadow,transform] duration-200 hover:-translate-y-0.5 hover:border-[#c9bcb4] hover:shadow-soft"
+          className="glass glass-ring glass-sheen block rounded-lg p-2.5 no-underline transition-[transform,box-shadow] duration-200 hover:-translate-y-1 hover:shadow-[0_16px_48px_rgba(33,29,27,0.14)]"
         >
-          <div className="aspect-[4/5] overflow-hidden bg-line">
+          <div className="aspect-[4/5] overflow-hidden rounded-md bg-white/40">
             <motion.img
               src={productImage(product)}
               alt={`${product.name} from the CY Studio collection`}
@@ -26,9 +26,9 @@ export default function ProductCard({ product }: { product: Product }) {
               transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
             />
           </div>
-          <div className="flex items-baseline justify-between gap-3 px-4 py-3.5">
+          <div className="flex items-baseline justify-between gap-3 px-2 pb-1.5 pt-3">
             <span className="text-[0.9rem] font-medium text-ink">{product.name}</span>
-            <span className="whitespace-nowrap text-[0.9rem] text-muted">{peso(product.price)}</span>
+            <span className="whitespace-nowrap text-[0.9rem] font-semibold text-ink">{peso(product.price)}</span>
           </div>
         </Link>
       </TiltCard>

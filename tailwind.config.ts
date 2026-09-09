@@ -9,9 +9,11 @@ export default {
         deep: '#F3EEE9',
         surface: '#FFFFFF',
         ink: '#211D1B',
+        'ink-hover': '#3D3632',
         muted: '#6E645F',
         line: '#E4DCD6',
-        clay: '#B4693A'
+        clay: '#B4693A',
+        'clay-deep': '#8A5A3A'
       },
       fontFamily: {
         sans: ['-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Inter', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif']

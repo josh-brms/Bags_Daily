@@ -28,7 +28,7 @@ function FooterLink({ to, children }: { to: string; children: React.ReactNode })
 
 export default function Footer() {
   return (
-    <footer id="contact" className="border-t border-line bg-deep">
+    <footer id="contact" className="glass relative z-10 border-t border-white/50">
       <div className="container-cy grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-[2fr_1.2fr_1fr_1fr]">
         <div className="flex flex-col items-start gap-2.5">
           <BrandMark />
@@ -74,7 +74,7 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="border-t border-line py-5 text-[0.85rem] text-muted">
+      <div className="border-t border-white/50 py-5 text-[0.85rem] text-muted">
         <div className="container-cy">
           {new Date().getFullYear()} CY Studio. All rights reserved.
         </div>

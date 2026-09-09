@@ -5,6 +5,7 @@ import ColorPicker from '@/components/shop/ColorPicker'
 import SizePicker from '@/components/shop/SizePicker'
 import AddToBagButton from '@/components/shop/AddToBagButton'
 import ProductCard from '@/components/shop/ProductCard'
+import { Button } from '@/components/ui/button'
 import { PRODUCTS, productImage, relatedProducts } from '@/data/products'
 import { peso } from '@/lib/peso'
 
@@ -14,15 +15,14 @@ export default function Product() {
 
   if (!product) {
     return (
-      <div className="container-cy py-24 text-center">
-        <h1 className="text-[1.7rem] font-semibold">Product not found</h1>
-        <p className="mb-8 mt-3 text-muted">This piece isn't in the collection.</p>
-        <Link
-          to="/#shop"
-          className="inline-flex min-h-11 items-center rounded-md border border-ink bg-ink px-6 py-3 text-[0.9rem] font-medium text-cream no-underline transition-colors hover:border-[#3d3632] hover:bg-[#3d3632]"
-        >
-          Back to shop
-        </Link>
+      <div className="container-cy py-16">
+        <div className="glass glass-ring glass-sheen mx-auto max-w-xl rounded-lg p-8 text-center">
+          <h1 className="text-[1.7rem] font-semibold">Product not found</h1>
+          <p className="mb-8 mt-3 text-ink/80">This piece isn't in the collection.</p>
+          <Button asChild>
+            <Link to="/#shop">Back to shop</Link>
+          </Button>
+        </div>
       </div>
     )
   }
@@ -47,36 +47,35 @@ function ProductDetail({ productId }: { productId: number }) {
       </Link>
 
       <div className="grid items-start gap-10 lg:grid-cols-[1.1fr_1fr] lg:gap-14">
-        <div className="aspect-[4/5] overflow-hidden rounded-md bg-line">
+        <div className="glass glass-ring glass-sheen aspect-[4/5] overflow-hidden rounded-lg bg-white/40">
           <img
             src={productImage(product)}
             alt={`${product.name} from the CY Studio collection`}
             width={1600}
             height={2000}
-            fetchPriority="high"
             className="h-full w-full object-cover"
           />
         </div>
 
-        <div className="lg:sticky lg:top-24">
-          <span className="inline-block rounded-pill border border-line px-3 py-1 text-[0.72rem] uppercase tracking-[0.14em] text-muted">
+        <div className="glass glass-ring glass-sheen rounded-lg p-6 md:p-8 lg:sticky lg:top-24">
+          <span className="inline-block rounded-pill border border-white/60 bg-white/40 px-3 py-1 text-[0.72rem] uppercase tracking-[0.14em] text-ink">
             The Collection
           </span>
           <h1 className="mt-4 text-[clamp(1.7rem,3vw,2.2rem)] font-semibold tracking-[-0.01em]">
             {product.name}
           </h1>
           <p className="mt-2 text-[1.35rem] font-semibold">{peso(product.price)}</p>
-          <p className="mb-8 mt-5 text-muted">{product.description}</p>
+          <p className="mb-8 mt-5 text-ink/80">{product.description}</p>
 
           <div className="mb-7">
-            <p className="mb-3 text-[0.78rem] uppercase tracking-[0.1em] text-muted">
+            <p className="mb-3 text-[0.78rem] uppercase tracking-[0.1em] text-ink/70">
               Colour — <span className="font-semibold text-ink">{color}</span>
             </p>
             <ColorPicker colors={product.colors} value={color} onChange={setColor} />
           </div>
 
           <div className="mb-7">
-            <p className="mb-3 text-[0.78rem] uppercase tracking-[0.1em] text-muted">
+            <p className="mb-3 text-[0.78rem] uppercase tracking-[0.1em] text-ink/70">
               Size — <span className="font-semibold text-ink">{size}</span>
             </p>
             <SizePicker sizes={product.sizes} value={size} onChange={setSize} />
