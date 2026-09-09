@@ -3,7 +3,7 @@ import { motion, useMotionValue, useSpring, useReducedMotion } from 'framer-moti
 
 export default function CustomCursor() {
   const reduced = useReducedMotion()
-  const [enabled, setEnabled] = useState(false)
+  const [finePointer] = useState(() => window.matchMedia('(pointer: fine)').matches)
   const [hovering, setHovering] = useState(false)
 
   const dotX = useMotionValue(-100)
@@ -11,10 +11,7 @@ export default function CustomCursor() {
   const ringX = useSpring(dotX, { stiffness: 250, damping: 22 })
   const ringY = useSpring(dotY, { stiffness: 250, damping: 22 })
 
-  useEffect(() => {
-    const fine = window.matchMedia('(pointer: fine)').matches
-    setEnabled(fine && !reduced)
-  }, [reduced])
+  const enabled = finePointer && !reduced
 
   useEffect(() => {
     if (!enabled) return

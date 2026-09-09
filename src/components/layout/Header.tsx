@@ -13,14 +13,16 @@ const links = [
 ]
 
 export default function Header() {
+  const location = useLocation()
   const [open, setOpen] = useState(false)
+  const [lastLocation, setLastLocation] = useState(location)
   const closeRef = useRef<HTMLButtonElement>(null)
   const toggleRef = useRef<HTMLButtonElement>(null)
-  const location = useLocation()
 
-  useEffect(() => {
+  if (lastLocation !== location) {
+    setLastLocation(location)
     setOpen(false)
-  }, [location.pathname, location.hash])
+  }
 
   useEffect(() => {
     if (open) {

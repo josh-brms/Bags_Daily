@@ -14,8 +14,8 @@
   },
   "dependencies": {
     "@radix-ui/react-radio-group": "^1.4.7",
-    "@react-three/drei": "^9.122.0",
-    "@react-three/fiber": "^8.18.0",
+    "@react-three/drei": "9.122",
+    "@react-three/fiber": "8.18",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "framer-motion": "^11.18.2",
@@ -26,11 +26,11 @@
     "react-router-dom": "^6.30.6",
     "sonner": "^2.0.8",
     "tailwind-merge": "^3.6.0",
-    "three": "^0.169.0",
+    "three": "^0.186.0",
     "zustand": "^5.0.15"
   },
   "devDependencies": {
-    "@eslint/js": "^9.39.5",
+    "@eslint/js": "^10.0.1",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
@@ -38,12 +38,12 @@
     "@types/node": "^26.5.0",
     "@types/react": "^18.3.31",
     "@types/react-dom": "^18.3.7",
-    "@types/three": "^0.169.0",
+    "@types/three": "^0.185.4",
     "@vitejs/plugin-react": "^4.7.0",
     "autoprefixer": "^10.5.5",
-    "eslint": "^9.39.5",
-    "eslint-plugin-react-hooks": "^5.2.0",
-    "eslint-plugin-react-refresh": "^0.4.26",
+    "eslint": "^10.10.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.6",
     "globals": "^17.12.0",
     "jsdom": "^30.0.1",
     "postcss": "^8.5.28",
@@ -52,5 +52,8 @@
     "typescript-eslint": "^8.70.0",
     "vite": "^5.4.21",
     "vitest": "^2.1.9"
+  },
+  "overrides": {
+    "three-mesh-bvh": "^0.9.14"
   }
 }
