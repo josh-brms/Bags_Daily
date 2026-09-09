@@ -12,7 +12,7 @@ export default function ProductCard({ product }: { product: Product }) {
         <Link
           to={`/product/${product.id}`}
           aria-label={`View ${product.name}, ${peso(product.price)}`}
-          className="glass glass-ring glass-sheen block rounded-lg p-2.5 no-underline transition-[transform,box-shadow] duration-200 hover:-translate-y-1 hover:shadow-[0_16px_48px_rgba(33,29,27,0.14)]"
+          className="glass glass-ring glass-sheen block rounded-lg p-2.5 no-underline transition-[transform,box-shadow] duration-200 hover:-translate-y-1 hover:shadow-[0_16px_48px_rgba(33,29,27,0.14)] active:scale-[0.98]"
         >
           <div className="aspect-[4/5] overflow-hidden rounded-md bg-white/40">
             <motion.img

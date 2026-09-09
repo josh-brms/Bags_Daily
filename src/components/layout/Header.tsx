@@ -52,7 +52,7 @@ export default function Header() {
                 end
                 className={({ isActive }) =>
                   cn(
-                    'relative py-1.5 text-[0.85rem] font-medium uppercase tracking-[0.08em] text-ink no-underline',
+                    'relative flex min-h-11 items-center py-1.5 text-[0.85rem] font-medium uppercase tracking-[0.08em] text-ink no-underline active:opacity-60',
                     !isActive && 'hover:underline hover:decoration-clay hover:underline-offset-4'
                   )
                 }
@@ -73,7 +73,7 @@ export default function Header() {
               <Link
                 key={l.to}
                 to={l.to}
-                className="py-1.5 text-[0.85rem] font-medium uppercase tracking-[0.08em] text-ink no-underline hover:underline hover:decoration-clay hover:underline-offset-4"
+                className="flex min-h-11 items-center py-1.5 text-[0.85rem] font-medium uppercase tracking-[0.08em] text-ink no-underline active:opacity-60 hover:underline hover:decoration-clay hover:underline-offset-4"
               >
                 {l.label}
               </Link>
@@ -127,7 +127,7 @@ export default function Header() {
                 >
                   <Link
                     to={l.to}
-                    className="text-[1.15rem] uppercase tracking-[0.14em] text-ink no-underline"
+                    className="flex min-h-11 items-center px-6 text-[1.15rem] uppercase tracking-[0.14em] text-ink no-underline active:opacity-60"
                     onClick={() => setOpen(false)}
                   >
                     {l.label}

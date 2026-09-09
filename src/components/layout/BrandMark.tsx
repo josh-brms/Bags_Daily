@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 
 export default function BrandMark({ className = '' }: { className?: string }) {
   return (
-    <Link to="/" className={`inline-flex items-center gap-3 text-ink no-underline ${className}`} aria-label="CY Studio — home">
+    <Link to="/" className={`inline-flex min-h-11 items-center gap-3 py-2 text-ink no-underline active:opacity-60 ${className}`} aria-label="CY Studio — home">
       <svg
         className="h-[30px] w-[30px] shrink-0"
         viewBox="0 0 36 36"

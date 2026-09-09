@@ -32,7 +32,7 @@ export default function SortControl({ value, onChange }: SortControlProps) {
             }
             onClick={() => onChange(o.value)}
             className={cn(
-              'inline-flex min-h-9 items-center gap-1.5 rounded-pill px-4 text-[0.8rem] font-medium transition-colors duration-200',
+              'inline-flex min-h-11 items-center gap-1.5 rounded-pill px-4 text-[0.8rem] font-medium transition-colors duration-200 active:scale-[0.97]',
               active ? 'bg-ink text-cream' : 'text-ink hover:bg-white/60'
             )}
           >

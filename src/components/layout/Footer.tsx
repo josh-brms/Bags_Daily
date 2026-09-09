@@ -21,7 +21,7 @@ function FooterLink({ to, children }: { to: string; children: React.ReactNode })
   return (
     <Link
       to={to}
-      className="text-[0.95rem] text-muted no-underline hover:text-ink hover:underline hover:underline-offset-4"
+      className="inline-flex min-h-11 items-center text-[0.95rem] text-muted no-underline active:text-ink hover:text-ink hover:underline hover:underline-offset-4"
     >
       {children}
     </Link>
@@ -50,7 +50,7 @@ export default function Footer() {
           </address>
           <a
             href="mailto:hello@cy.studio"
-            className="inline-flex items-center gap-2 text-[0.95rem] text-muted no-underline hover:text-ink hover:underline hover:underline-offset-4"
+            className="inline-flex min-h-11 items-center gap-2 text-[0.95rem] text-muted no-underline active:text-ink hover:text-ink hover:underline hover:underline-offset-4"
           >
             <Mail size={16} strokeWidth={1.75} aria-hidden="true" />
             hello@cy.studio
