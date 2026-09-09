@@ -1,21 +1,35 @@
 # CY Studio — The Collection
 
-Static storefront for the CY Studio collection: home page, product detail pages, and legal pages (privacy, terms, refund, cookies).
+Interactive storefront for the CY Studio collection, built with React, TypeScript, and Three.js.
 
-Built with plain HTML, CSS, and vanilla JavaScript. No build step, no external requests.
+## Stack
 
-## Run locally
+- Vite 5 + React 18 + TypeScript (strict)
+- Three.js via @react-three-fiber (WebGL hero: shader gradient + floating geometry, lazy-loaded)
+- Framer Motion (page transitions, staggered reveals, layout animations)
+- Lenis (smooth scrolling)
+- Zustand (bag state), React Router (routes), Sonner (toasts)
+- Tailwind CSS + Radix UI radio groups (keyboard-navigable colour/size pickers)
+- Vitest + React Testing Library
+
+## Run
 
 ```bash
-python3 -m http.server 8123
+npm ci
+npm run dev       # dev server
+npm run build     # typecheck + production build to dist/
+npm test          # unit + component tests
+npm run lint      # eslint
 ```
 
-Then open http://localhost:8123
+## Pages
 
-## Structure
+- `/` — WebGL hero, product grid, about
+- `/product/:id` — detail page with colour/size pickers and demo add-to-bag
+- `/privacy`, `/terms`, `/refund`, `/cookies` — legal pages (PH-law aligned)
 
-- `index.html` — hero, product grid, about, footer
-- `product.html?id=N` — product detail (colours, sizes, add-to-bag demo)
-- `products.js` — product data (prices in PHP)
-- `privacy.html` / `terms.html` / `refund.html` / `cookies.html` — legal pages
-- `images/` — product and scene photography
+## Deployment
+
+GitHub Actions deploys to GitHub Pages on every push to `main`
+(`.github/workflows/deploy.yml`). The app builds with `base: /Bags_Daily/`
+and `404.html` as an SPA fallback.

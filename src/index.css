@@ -1,0 +1,90 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-cream text-ink font-sans antialiased;
+  }
+
+  ::selection {
+    @apply bg-clay/20;
+  }
+
+  :focus-visible {
+    @apply outline-none ring-2 ring-ink ring-offset-2 ring-offset-cream rounded-sm;
+  }
+
+  section[id] {
+    scroll-margin-top: 90px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  .container-cy {
+    @apply mx-auto max-w-6xl px-6;
+  }
+
+  .skip-link {
+    @apply absolute left-4 top-[-64px] z-[100] rounded-md bg-ink px-4 py-2.5 text-sm text-cream transition-[top] duration-200 focus:top-3;
+  }
+
+  .section-title {
+    @apply text-center text-sm font-semibold uppercase tracking-[0.18em];
+  }
+
+  .section-title::after {
+    content: '';
+    @apply mx-auto mt-3.5 block h-0.5 w-7 bg-clay;
+  }
+
+  .legal-prose h2 {
+    @apply mt-9 mb-3 text-base font-semibold uppercase tracking-[0.06em];
+  }
+
+  .legal-prose p,
+  .legal-prose li {
+    @apply text-[0.98rem] text-[#4d443f];
+  }
+
+  .legal-prose ul,
+  .legal-prose ol {
+    @apply my-2.5 list-disc pl-6;
+  }
+
+  .legal-prose li {
+    @apply mb-1.5;
+  }
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.cursor-dot,
+.cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 90;
+  pointer-events: none;
+  border-radius: 9999px;
+  mix-blend-mode: difference;
+}
