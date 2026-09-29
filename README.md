@@ -153,10 +153,50 @@ The admin is not linked from the site. It is reachable by URL only.
 - **Turn off public sign-ups** in Supabase Auth, or anyone who finds `/admin` can
   create an account and edit your catalogue.
 - **Update the social URLs in `index.html`** if you deploy anywhere other than
-  GitHub Pages. Crawlers do not run JavaScript, so those cannot be filled in at runtime.
+  `bags-daily.vercel.app`. Crawlers do not run JavaScript, so those cannot be
+  filled in at runtime.
 
 ## Deployment
 
-GitHub Actions deploys to GitHub Pages on every push to `main`
-(`.github/workflows/deploy.yml`). The app builds with `base: /Bags_Daily/`
-and `404.html` as an SPA fallback.
+**Vercel is the production host** — <https://bags-daily.vercel.app>. It deploys
+from `main` automatically. GitHub Pages is not used; its workflow has been
+removed, so nothing publishes a second, catalogue-less copy of the site.
+
+### The two variables the build needs
+
+Vite inlines `VITE_*` variables **at build time**, not at runtime. A build on a
+machine without them still succeeds and still deploys — it just ships a site that
+reports *"The catalogue is not connected"*, with an admin that shows a
+"Not configured" panel instead of a sign-in form. Nothing in CI can tell you,
+because the build is genuinely green. This has already happened once.
+
+Set these in the Vercel project (**Settings → Environment Variables**, Production
+scope) and redeploy — a redeploy is required, because adding a variable does not
+rebuild an already-deployed bundle:
+
+```
+VITE_SUPABASE_URL=https://bwhkaefcjsiwdeqihwkf.supabase.co
+VITE_SUPABASE_ANON_KEY=<the sb_publishable_… key from Supabase → Project Settings → API>
+```
+
+The anon key is designed to be public — it ships in the browser bundle to every
+visitor. Keeping it out of the repo is about git history, not secrecy.
+
+After any deploy, confirm the config actually landed rather than trusting the
+green check:
+
+```bash
+curl -s https://bags-daily.vercel.app/ | grep -o '/assets/index-[A-Za-z0-9_-]*\.js'
+curl -s "https://bags-daily.vercel.app/assets/index-<hash>.js" | grep -c bwhkaefcjsiwdeqihwkf
+```
+
+A count of `0` means the build had no Supabase config, whatever CI reported.
+
+### Deep links
+
+`vercel.json` rewrites everything to `index.html` so client-side routes survive a
+hard load. The pattern is `/(.*)`; do not narrow it with a negative lookahead
+like `((?!api/).*)` unless there is an `api/` directory to protect. There is not
+one, and doing that silently disables the fallback for *every* route — `/admin`,
+`/collection` and `/product/:id` all return a platform 404 while the homepage
+still looks fine, because in-app navigation never hits the server.
