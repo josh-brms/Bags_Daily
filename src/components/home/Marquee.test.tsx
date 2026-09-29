@@ -7,7 +7,7 @@ describe('Marquee', () => {
     const { container } = render(<Marquee />)
     expect(container.firstChild).toHaveAttribute('aria-hidden', 'true')
     expect(container.textContent).toContain('The Collection')
-    expect(container.textContent).toContain('Naga City')
+    expect(container.textContent).toContain('Legazpi')
     expect(container.querySelectorAll('.marquee-track > div').length).toBe(2)
   })
 })

@@ -1,6 +1,7 @@
-import React, { Suspense, useState } from 'react'
+import React, { Suspense, useEffect, useState } from 'react'
 import { useReducedMotion } from 'framer-motion'
 import HeroErrorBoundary from './HeroErrorBoundary'
+import { markThreePending } from '@/lib/loadSignals'
 
 function hasWebGL(): boolean {
   try {
@@ -34,6 +35,12 @@ const AmbientCanvas = React.lazy(() => import('./AmbientCanvas'))
 export default function AmbientScene() {
   const reduced = useReducedMotion()
   const [supported] = useState(hasWebGL)
+
+  // Runs before the splash loader's effect (this renders first in App), so the
+  // loader knows a canvas is genuinely coming and can gate on it.
+  useEffect(() => {
+    if (!reduced && supported) markThreePending()
+  }, [reduced, supported])
 
   if (reduced || !supported) return <AmbientFallback />
 

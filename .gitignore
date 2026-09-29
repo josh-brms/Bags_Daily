@@ -2,5 +2,11 @@ node_modules/
 dist/
 coverage/
 *.log
+*.tsbuildinfo
 .DS_Store
+
+# Environment files. `.env.local` is the one that actually holds the Supabase
+# key, and Vite only reads `.env` in some setups — ignore the whole family.
 .env
+.env.local
+.env.*.local

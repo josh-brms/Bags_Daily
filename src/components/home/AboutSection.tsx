@@ -1,5 +1,7 @@
-import { motion, type Variants } from 'framer-motion'
+import { motion, useReducedMotion, type Variants } from 'framer-motion'
 import { Layers, Palette, Sparkles } from 'lucide-react'
+import { Card, CardContent } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
 
 const statement =
   'The collection is a study in warm neutral tones — every piece made to be worn, layered, and lived in. Open any product to see its price, description, and available colours.'
@@ -8,17 +10,20 @@ const features = [
   {
     icon: Sparkles,
     title: 'Small batches',
-    text: 'Each piece is cut and finished in limited runs, so the collection stays considered.'
+    text: 'Each piece is cut and finished in limited runs, so the collection stays considered.',
+    tone: 'clay' as const
   },
   {
     icon: Palette,
     title: 'Warm neutrals',
-    text: 'Creams, sands, and clays chosen to pair with each other and with your wardrobe.'
+    text: 'Creams, sands, and clays chosen to pair with each other and with your wardrobe.',
+    tone: 'blush' as const
   },
   {
     icon: Layers,
     title: 'Made to layer',
-    text: 'Silhouettes designed to be worn alone or stacked through every season.'
+    text: 'Silhouettes designed to be worn alone or stacked through every season.',
+    tone: 'lilac' as const
   }
 ]
 
@@ -43,6 +48,8 @@ const cardsParentVariants: Variants = {
 }
 
 export default function AboutSection() {
+  const reduced = useReducedMotion()
+
   return (
     <div className="container-cy">
       <motion.h2
@@ -61,12 +68,12 @@ export default function AboutSection() {
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.4 }}
-        className="mx-auto mt-10 max-w-[54ch] text-center text-[clamp(1.15rem,2.4vw,1.5rem)] font-medium leading-[1.55] text-ink"
+        className="mx-auto mt-10 max-w-[54ch] text-center font-display text-[clamp(1.25rem,2.6vw,1.7rem)] font-medium leading-[1.5] tracking-[-0.01em] text-ink"
       >
         {statement.split(' ').map((word, i) => (
           <motion.span key={word + i} variants={wordVariants} className="inline-block">
             {word}
-            {'\u00A0'}
+            {' '}
           </motion.span>
         ))}
       </motion.p>
@@ -76,17 +83,32 @@ export default function AboutSection() {
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.3 }}
-        className="mx-auto mt-14 grid max-w-4xl list-none gap-4 sm:grid-cols-3 md:gap-6"
+        className="mx-auto mt-14 grid max-w-4xl list-none gap-5 sm:grid-cols-3 md:gap-6"
       >
-        {features.map(f => (
+        {features.map((f, i) => (
           <motion.li key={f.title} variants={cardVariants}>
-            <div className="glass glass-ring glass-sheen h-full rounded-lg p-6">
-              <span className="inline-flex h-11 w-11 items-center justify-center rounded-md bg-clay/10 text-clay-deep">
-                <f.icon size={22} strokeWidth={1.75} aria-hidden="true" />
-              </span>
-              <h3 className="mt-4 text-[0.95rem] font-semibold tracking-[0.02em]">{f.title}</h3>
-              <p className="mt-2 text-[0.9rem] leading-relaxed text-ink/75">{f.text}</p>
-            </div>
+            <Card className="group h-full rounded-xl hover:-translate-y-1.5 hover:shadow-lift">
+              <CardContent className="p-6">
+                <motion.span
+                  animate={reduced ? undefined : { y: [0, -5, 0] }}
+                  transition={{
+                    duration: 4 + i * 0.4,
+                    repeat: Infinity,
+                    ease: 'easeInOut'
+                  }}
+                  className="inline-flex h-12 w-12 items-center justify-center rounded-pill bg-clay/10 text-clay-deep transition-colors duration-300 group-hover:bg-clay/20"
+                >
+                  <f.icon size={22} strokeWidth={1.75} aria-hidden="true" />
+                </motion.span>
+                <Badge variant={f.tone} className="mt-5">
+                  {`0${i + 1}`}
+                </Badge>
+                <h3 className="mt-3 font-display text-[1.05rem] font-semibold tracking-[-0.01em]">
+                  {f.title}
+                </h3>
+                <p className="mt-2 text-[0.9rem] leading-relaxed text-ink/75">{f.text}</p>
+              </CardContent>
+            </Card>
           </motion.li>
         ))}
       </motion.ul>

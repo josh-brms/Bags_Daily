@@ -1,8 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36">
-  <rect width="36" height="36" rx="8" fill="#211D1B"/>
-  <g fill="none" stroke="#FAF8F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <circle cx="18" cy="18" r="11" stroke-width="1.5"/>
-    <path d="M13.5 13.5 L18 19.5 L22.5 13.5"/>
-    <path d="M18 19.5 V25"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-label="Bags Daily">
+  <rect width="24" height="24" rx="5" fill="#211D1B"/>
+  <!-- Sparkle omitted: it collapses into a smudge at 16px. Bag scaled 1.35x about
+       (12, 12.75) so it fills the tile, which also thickens the stroke to ~2.4. -->
+  <g transform="translate(12 12.75) scale(1.35) translate(-12 -12.75)"
+     fill="none" stroke="#FAF8F6" stroke-width="1.8"
+     stroke-linecap="round" stroke-linejoin="round">
+    <path d="M7.5 9.5C7.5 5.5 11 5.5 11 9.5"/>
+    <path d="M13 9.5C13 5.5 16.5 5.5 16.5 9.5"/>
+    <path d="M6 9.5h12a1.6 1.6 0 0 1 1.6 1.8l-.6 6.9a2 2 0 0 1-2 1.8H7a2 2 0 0 1-2-1.8l-.6-6.9A1.6 1.6 0 0 1 6 9.5Z"/>
   </g>
 </svg>

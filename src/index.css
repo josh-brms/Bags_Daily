@@ -3,12 +3,87 @@
 @tailwind utilities;
 
 @layer base {
+  /*
+   * Metric-matched fallbacks for the Google Fonts. Without size-adjust the swap
+   * from Fraunces/Manrope to the fallback reflows the headline, which is a
+   * cumulative layout shift. Values approximate the real fonts' metrics.
+   */
+  @font-face {
+    font-family: 'Fraunces Fallback';
+    src: local('Georgia'), local('Times New Roman'), local('serif');
+    size-adjust: 104%;
+    ascent-override: 92%;
+    descent-override: 24%;
+    line-gap-override: 0%;
+  }
+
+  @font-face {
+    font-family: 'Manrope Fallback';
+    src: local('Segoe UI'), local('Helvetica Neue'), local('Arial'), local('sans-serif');
+    size-adjust: 101%;
+    ascent-override: 97%;
+    descent-override: 25%;
+    line-gap-override: 0%;
+  }
+
+  /*
+   * Quicksand is the wordmark face, so it swaps in on every page. Read from
+   * quicksand.ttf: unitsPerEm 1000, typoAscender 1000, typoDescender -250,
+   * lineGap 0 — hence 100% / 25% / 0%, which reproduces the same 1.25em content
+   * box Quicksand itself declares. The browser trusts these overrides over the
+   * fallback's own metrics, which is what stops the swap from shifting the line.
+   */
+  @font-face {
+    font-family: 'Quicksand Fallback';
+    src: local('Century Gothic'), local('URW Gothic'), local('Avenir Next'),
+      local('Trebuchet MS'), local('sans-serif');
+    size-adjust: 100%;
+    ascent-override: 100%;
+    descent-override: 25%;
+    line-gap-override: 0%;
+  }
+
   html {
     scroll-behavior: smooth;
   }
 
   body {
     @apply bg-cream text-ink font-sans antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display;
+    font-variation-settings: 'SOFT' 40, 'WONK' 1;
+  }
+
+  /*
+   * The custom cursor (CustomCursor.tsx) is only enabled for fine pointers and is
+   * disabled under reduced motion, so the native cursor must be restored in exactly
+   * those cases — otherwise the two are drawn on top of each other.
+   */
+  @media (pointer: fine) {
+    body:has(.cursor-dot) {
+      cursor: none;
+    }
+    body:has(.cursor-dot) a,
+    body:has(.cursor-dot) button,
+    body:has(.cursor-dot) [role='button'] {
+      cursor: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    body:has(.cursor-dot) {
+      cursor: auto;
+    }
+    body:has(.cursor-dot) a,
+    body:has(.cursor-dot) button,
+    body:has(.cursor-dot) [role='button'] {
+      cursor: auto;
+    }
   }
 
   ::selection {
@@ -33,6 +108,7 @@
       animation-duration: 0.01ms !important;
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
     }
   }
 }
@@ -42,6 +118,91 @@
     @apply mx-auto max-w-6xl px-6;
   }
 
+  /* --- Animated aurora backdrop for the hero ---
+     Kept deliberately faint: it sits on top of the WebGL scene, and at full strength
+     it veils the 3D shapes into a flat wash. */
+  .aurora {
+    position: absolute;
+    inset: -20%;
+    pointer-events: none;
+    background:
+      radial-gradient(38% 34% at 22% 28%, rgba(242, 217, 160, 0.3), transparent 62%),
+      radial-gradient(34% 30% at 78% 30%, rgba(232, 180, 184, 0.26), transparent 62%),
+      radial-gradient(40% 36% at 62% 78%, rgba(196, 177, 212, 0.24), transparent 62%),
+      radial-gradient(30% 28% at 10% 72%, rgba(183, 212, 196, 0.2), transparent 62%);
+    filter: blur(30px);
+  }
+
+  .aurora > span {
+    position: absolute;
+    inset: 0;
+    will-change: transform, opacity;
+  }
+
+  .aurora > span:nth-child(1) { animation: aurora-shift 14s ease-in-out infinite; }
+  .aurora > span:nth-child(2) { animation: aurora-shift 19s ease-in-out infinite reverse; }
+  .aurora > span:nth-child(3) { animation: aurora-shift 23s ease-in-out infinite; }
+
+  @keyframes aurora-shift {
+    0%, 100% { transform: translate3d(0, 0, 0) scale(1); opacity: 0.35; }
+    50% { transform: translate3d(3%, -4%, 0) scale(1.12); opacity: 0.55; }
+  }
+
+  /* --- Sparkle accent --- */
+  .sparkle {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border-radius: 9999px;
+    background: currentColor;
+    animation: pulse-soft 3.6s ease-in-out infinite;
+  }
+
+  @keyframes pulse-soft {
+    0%, 100% { opacity: 0.25; transform: scale(0.85); }
+    50% { opacity: 0.9; transform: scale(1.4); }
+  }
+
+  /* --- Soft conic ring for the scroll indicator --- */
+  .floaty {
+    animation: floaty 6s ease-in-out infinite;
+  }
+
+  @keyframes floaty {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  .bob {
+    animation: bob 2.2s ease-in-out infinite;
+  }
+
+  @keyframes bob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(6px); }
+  }
+
+  .shimmer {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .shimmer::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(100deg, transparent 35%, rgba(255, 255, 255, 0.55) 50%, transparent 65%);
+    transform: translateX(-120%);
+    animation: shimmer 3.2s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  @keyframes shimmer {
+    0% { transform: translateX(-120%); }
+    100% { transform: translateX(120%); }
+  }
+
+  /* --- Glass system (existing) --- */
   .glass {
     background: rgba(255, 255, 255, 0.42);
     -webkit-backdrop-filter: blur(18px) saturate(150%);
@@ -81,25 +242,25 @@
   }
 
   .skip-link {
-    @apply absolute left-4 top-[-64px] z-[100] rounded-md bg-ink px-4 py-2.5 text-sm text-cream transition-[top] duration-200 focus:top-3;
+    @apply absolute left-4 top-[-64px] z-[100] rounded-pill bg-ink px-4 py-2.5 text-sm text-cream transition-[top] duration-200 focus:top-3;
   }
 
   .section-title {
-    @apply text-center text-sm font-semibold uppercase tracking-[0.18em];
+    @apply text-center font-display text-sm font-semibold uppercase tracking-[0.18em];
   }
 
   .section-title::after {
     content: '';
-    @apply mx-auto mt-3.5 block h-0.5 w-7 bg-clay;
+    @apply mx-auto mt-3.5 block h-0.5 w-7 rounded-pill bg-gradient-to-r from-clay via-blush to-lilac;
   }
 
   .legal-prose h2 {
-    @apply mt-9 mb-3 text-base font-semibold uppercase tracking-[0.06em];
+    @apply mt-9 mb-3 font-display text-base font-semibold uppercase tracking-[0.06em];
   }
 
   .legal-prose p,
   .legal-prose li {
-    @apply text-[0.98rem] text-[#4d443f];
+    @apply text-[0.98rem] leading-relaxed text-[#4d443f];
   }
 
   .legal-prose ul,
@@ -143,6 +304,16 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  /* --- Splash loader fill --- */
+  @keyframes splash-fill {
+    from {
+      width: 10%;
+    }
+    to {
+      width: 90%;
+    }
+  }
+
   .marquee-track {
     animation: none;
   }

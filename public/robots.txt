@@ -1,2 +1,10 @@
 User-agent: *
 Allow: /
+
+# The admin route is a catalogue editor, not content. It is deliberately
+# disallowed so it does not appear in search results, while remaining
+# reachable by direct URL.
+Disallow: /admin
+Disallow: /Bags_Daily/admin
+
+Sitemap: https://josh-brms.github.io/Bags_Daily/sitemap.xml

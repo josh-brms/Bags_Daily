@@ -1,41 +1,53 @@
 import { describe, it, expect } from 'vitest'
-import { render, screen, waitFor } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
+import { render, screen, within } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import App from './App'
 
 function renderAt(path: string) {
   return render(
-    <MemoryRouter initialEntries={[path]} future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+    <MemoryRouter
+      initialEntries={[path]}
+      future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+    >
       <App />
     </MemoryRouter>
   )
 }
 
 describe('App routes', () => {
-  it('renders the home page with hero and product grid', () => {
+  it('renders the home page with the hero', () => {
     renderAt('/')
     expect(screen.getByRole('heading', { level: 1, name: /The Collection/i })).toBeInTheDocument()
-    expect(screen.getAllByRole('link', { name: /View Item \d+/ }).length).toBe(12)
   })
 
-  it('renders a product detail page', async () => {
-    const user = userEvent.setup()
-    renderAt('/product/3')
-    expect(screen.getByRole('heading', { level: 1, name: 'Item 003' })).toBeInTheDocument()
-    expect(screen.getAllByText('₱1,300').length).toBeGreaterThan(0)
-    const glow = screen.getByTestId('color-glow')
-    expect(glow.style.backgroundColor).toMatch(/240,\s*224,\s*224/)
-    await user.click(screen.getByRole('radio', { name: 'Amber' }))
-    await waitFor(
-      () => expect(glow.style.backgroundColor).toMatch(/242,\s*180,\s*92/),
-      { timeout: 2000 }
-    )
+  it('explains the catalogue is not connected when Supabase is unset', () => {
+    // The test environment has no VITE_SUPABASE_* vars, so the unconfigured path
+    // is the one under test. A configured-but-empty catalogue says something else.
+    renderAt('/')
+    expect(
+      screen.getByRole('heading', { name: /catalogue is not connected yet/i })
+    ).toBeInTheDocument()
   })
 
-  it('renders the not-found state for an invalid product id', () => {
-    renderAt('/product/999')
-    expect(screen.getByRole('heading', { name: 'Product not found' })).toBeInTheDocument()
+  it('still renders the hero and about section with no catalogue', () => {
+    renderAt('/')
+    expect(screen.getByRole('heading', { level: 1, name: /The Collection/i })).toBeInTheDocument()
+    // The tote section has an h2 "Warm neutrals"; AboutSection has an h3 of the
+    // same name, so scope to level 2.
+    expect(screen.getByRole('heading', { level: 2, name: 'Warm neutrals' })).toBeInTheDocument()
+  })
+
+  it('never renders a price anywhere — nothing is sold here', () => {
+    renderAt('/')
+    expect(screen.queryByText(/₱/)).not.toBeInTheDocument()
+    expect(screen.queryByText(/add to bag/i)).not.toBeInTheDocument()
+  })
+
+  it('brands the header as Bags Daily PH', () => {
+    renderAt('/')
+    // The wordmark also appears in the footer, so scope to the banner.
+    const header = within(screen.getByRole('banner'))
+    expect(header.getByRole('link', { name: /Bags Daily PH — home/i })).toBeInTheDocument()
   })
 
   it('renders legal pages', () => {
@@ -45,7 +57,16 @@ describe('App routes', () => {
 
   it('renders the 404 page for unknown routes', () => {
     renderAt('/nope')
-    expect(screen.getByRole('heading', { name: 'Page not found' })).toBeInTheDocument()
+    expect(
+      screen.getByRole('heading', { level: 1, name: /This one's lost in the racks/i })
+    ).toBeInTheDocument()
+  })
+
+  it('the deleted product route now 404s', () => {
+    renderAt('/product/3')
+    expect(
+      screen.getByRole('heading', { level: 1, name: /This one's lost in the racks/i })
+    ).toBeInTheDocument()
   })
 
   it('renders the footer with legal links on every page', () => {

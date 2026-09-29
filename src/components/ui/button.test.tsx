@@ -29,12 +29,12 @@ describe('Button', () => {
     render(
       <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <Button asChild>
-          <a href="/#shop">Browse the collection</a>
+          <a href="/#collection">Browse the collection</a>
         </Button>
       </MemoryRouter>
     )
     const link = screen.getByRole('link', { name: 'Browse the collection' })
-    expect(link).toHaveAttribute('href', '/#shop')
+    expect(link).toHaveAttribute('href', '/#collection')
     expect(link.className).toContain(buttonVariants({ variant: 'glass' }).split(' ')[0])
   })
 })

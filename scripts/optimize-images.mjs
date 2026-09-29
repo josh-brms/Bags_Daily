@@ -1,0 +1,164 @@
+#!/usr/bin/env node
+/**
+ * Generates responsive image variants and the social share image.
+ *
+ * Run once after adding or replacing files in public/images:
+ *   npm run images
+ *
+ * Output is committed, so there is no build-time cost and no sharp requirement in
+ * CI. A generated manifest maps each source image to its variants; anything not in
+ * the manifest degrades to a plain <img> rather than 404ing.
+ */
+import { mkdir, readdir, stat, writeFile } from 'node:fs/promises'
+import { existsSync } from 'node:fs'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
+import sharp from 'sharp'
+
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
+const imgDir = path.join(root, 'public', 'images')
+const manifestPath = path.join(root, 'src', 'data', 'imageVariants.ts')
+
+const SOURCES = /\.(jpe?g|png)$/i
+// BatqNRTa.jpg is the old parallax band photo, no longer referenced by any
+// component. It stays on disk but stops generating unused variants.
+const SKIP = /og-image|BatqNRTa/
+
+/** Widths to emit per source, clamped so we never upscale. */
+const widthsFor = (w) => [...new Set([Math.min(640, w), Math.min(1280, w)])].filter(n => n > 0)
+
+const slug = name => name.replace(SOURCES, '')
+
+async function variantsFor(file) {
+  const input = path.join(imgDir, file)
+  const meta = await sharp(input).metadata()
+  const base = slug(file)
+
+  const out = { avif: [], webp: [] }
+
+  for (const width of widthsFor(meta.width ?? 0)) {
+    const resized = sharp(input).resize({ width, withoutEnlargement: true })
+    const avif = `${base}-${width}.avif`
+    const webp = `${base}-${width}.webp`
+    await sharp(input)
+      .resize({ width, withoutEnlargement: true })
+      .avif({ quality: 55, effort: 6 })
+      .toFile(path.join(imgDir, avif))
+    await sharp(input)
+      .resize({ width, withoutEnlargement: true })
+      .webp({ quality: 78, effort: 5 })
+      .toFile(path.join(imgDir, webp))
+    out.avif.push({ width, path: `images/${avif}` })
+    out.webp.push({ width, path: `images/${webp}` })
+  }
+
+  return { original: `images/${file}`, ...out }
+}
+
+/** 1200x630 social card: brand mark, wordmark, tagline on the cream ground. */
+async function buildOgImage() {
+  const W = 1200
+  const H = 630
+  const cream = '#FAF8F6'
+  const ink = '#211D1B'
+
+  // The tote mark, scaled up from the 24-unit logo grid and centred.
+  const s = 7
+  const ox = (W - 24 * s) / 2
+  const oy = 150
+  const mark = [
+    'M7.5 9.5C7.5 5.5 11 5.5 11 9.5',
+    'M13 9.5C13 5.5 16.5 5.5 16.5 9.5',
+    'M6 9.5h12a1.6 1.6 0 0 1 1.6 1.8l-.6 6.9a2 2 0 0 1-2 1.8H7a2 2 0 0 1-2-1.8l-.6-6.9A1.6 1.6 0 0 1 6 9.5Z'
+  ]
+    .map(
+      d =>
+        `<path d="${d}" transform="translate(${ox} ${oy}) scale(${s})" fill="none" stroke="${ink}" stroke-width="${1.8 / s}" stroke-linecap="round" stroke-linejoin="round"/>`
+    )
+    .join('')
+
+  // Sparkle, filled, offset to the mark's upper right.
+  const sp = 2.6
+  const spx = ox + 20.5 * s
+  const spy = oy + 4.2 * s
+  const sparkle = `<path transform="translate(${spx} ${spy}) scale(${sp})" d="M0-1.8c0 1.17.63 1.8 1.8 1.8-1.17 0-1.8.63-1.8 1.8 0-1.17-.63-1.8-1.8-1.8 1.17 0 1.8-.63 1.8-1.8Z" fill="#B4693A"/>`
+
+  // "BAGS DAILY PH" is wider than the previous "BAGS DAILY", so the type has to
+  // come down to stay inside the 1200px canvas.
+  const titleSize = 62
+  const titleSpacing = 6
+
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">
+  <rect width="${W}" height="${H}" fill="${cream}"/>
+  <rect x="0" y="${H - 6}" width="${W}" height="6" fill="url(#g)"/>
+  <defs><linearGradient id="g" x1="0" x2="1">
+    <stop offset="0%" stop-color="#8A5A3A"/><stop offset="50%" stop-color="#E8B4B8"/>
+    <stop offset="100%" stop-color="#A38CBC"/>
+  </linearGradient></defs>
+  ${mark}
+  ${sparkle}
+  <text x="${W / 2}" y="${H - 96}" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif"
+        font-size="${titleSize}" font-weight="700" letter-spacing="${titleSpacing}" fill="${ink}">BAGS DAILY PH</text>
+  <text x="${W / 2}" y="${H - 40}" text-anchor="middle" font-family="Helvetica, Arial, sans-serif"
+        font-size="24" letter-spacing="3" fill="#6E645F">THE COLLECTION &#183; LEGAZPI CITY</text>
+</svg>`
+
+  await sharp(Buffer.from(svg)).png({ quality: 92 }).toFile(path.join(root, 'public', 'og-image.png'))
+}
+
+async function main() {
+  if (!existsSync(imgDir)) throw new Error(`Missing ${imgDir}`)
+
+  const files = (await readdir(imgDir))
+    .filter(f => SOURCES.test(f) && !SKIP.test(f))
+    .sort()
+
+  const manifest = {}
+  let before = 0
+  let after = 0
+
+  for (const file of files) {
+    before += (await stat(path.join(imgDir, file))).size
+    manifest[`images/${file}`] = await variantsFor(file)
+    process.stdout.write(`  ${file}\n`)
+  }
+
+  for (const entry of Object.values(manifest)) {
+    for (const v of [...entry.avif, ...entry.webp]) {
+      after += (await stat(path.join(root, 'public', v.path))).size
+    }
+  }
+
+  const ts = `/**
+ * GENERATED by scripts/optimize-images.mjs — do not edit by hand.
+ * Run \`npm run images\` after changing anything in public/images.
+ */
+export interface ImageVariant { width: number; path: string }
+export interface ImageEntry {
+  original: string
+  avif: ImageVariant[]
+  webp: ImageVariant[]
+}
+export const IMAGE_VARIANTS: Record<string, ImageEntry> = ${JSON.stringify(
+    manifest,
+    null,
+    2
+  )}
+`
+  await writeFile(manifestPath, ts, 'utf8')
+  await mkdir(path.dirname(manifestPath), { recursive: true }).catch(() => {})
+
+  await buildOgImage()
+
+  const kb = n => `${(n / 1024).toFixed(0)} KB`
+  console.log(`\n  ${files.length} source images`)
+  console.log(`  originals total: ${kb(before)}`)
+  console.log(`  variants total:  ${kb(after)} (across 2 formats x 2 widths)`)
+  console.log(`  wrote src/data/imageVariants.ts`)
+  console.log(`  wrote public/og-image.png (1200x630)`)
+}
+
+main().catch(err => {
+  console.error(err)
+  process.exit(1)
+})

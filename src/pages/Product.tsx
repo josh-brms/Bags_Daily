@@ -1,113 +1,127 @@
-import { useState } from 'react'
+import { useEffect, useMemo } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { ArrowLeft } from 'lucide-react'
-import ColorPicker from '@/components/shop/ColorPicker'
-import SizePicker from '@/components/shop/SizePicker'
-import AddToBagButton from '@/components/shop/AddToBagButton'
-import ProductCard from '@/components/shop/ProductCard'
+import { ArrowLeft, Loader2 } from 'lucide-react'
+import ProductGallery from '@/components/shop/ProductGallery'
+import InstagramLink from '@/components/shop/InstagramLink'
 import { Button } from '@/components/ui/button'
-import { PRODUCTS, productImage, relatedProducts } from '@/data/products'
-import { peso } from '@/lib/peso'
+import { useProducts } from '@/hooks/useProducts'
+import { fadeUp } from '@/lib/motion'
+import { formatPrice } from '@/lib/products'
+import { BRAND_NAME, INSTAGRAM_URL } from '@/data/site'
+import NotFound from './NotFound'
 
 export default function Product() {
   const { id } = useParams<{ id: string }>()
-  const product = PRODUCTS.find(p => p.id === Number.parseInt(id ?? '', 10))
+  const { products, loading, error } = useProducts()
 
-  if (!product) {
+  // The id is a uuid, so it is compared as a string. Number(id) would be NaN and
+  // the product would never be found.
+  const product = useMemo(() => products.find(p => p.id === id), [products, id])
+
+  // The gallery is the page's whole point, so a stale tab title left over from
+  // the collection is worse than no title at all.
+  useEffect(() => {
+    document.title = product
+      ? `${product.name} — ${BRAND_NAME}`
+      : `${BRAND_NAME} — The Collection`
+  }, [product])
+
+  if (loading) {
     return (
-      <div className="container-cy py-16">
-        <div className="glass glass-ring glass-sheen mx-auto max-w-xl rounded-lg p-8 text-center">
-          <h1 className="text-[1.7rem] font-semibold">Product not found</h1>
-          <p className="mb-8 mt-3 text-ink/80">This piece isn't in the collection.</p>
-          <Button asChild>
-            <Link to="/#shop">Back to shop</Link>
-          </Button>
-        </div>
+      <div className="container-cy flex items-center justify-center gap-2 py-32 text-ink/70">
+        <Loader2 size={16} className="animate-spin" aria-hidden="true" />
+        Loading the collection…
       </div>
     )
   }
 
-  return <ProductDetail key={product.id} productId={product.id} />
-}
-
-function ProductDetail({ productId }: { productId: number }) {
-  const product = PRODUCTS.find(p => p.id === productId)!
-  const [color, setColor] = useState(product.colors[0].name)
-  const [size, setSize] = useState(product.sizes[0])
-  const related = relatedProducts(product)
-  const selectedColorHex = (product.colors.find(c => c.name === color) ?? product.colors[0]).hex
+  if (!product) {
+    // A bad id and a failed fetch are the same experience to a visitor: nothing
+    // to look at. The 404 page explains where to go next.
+    if (error) {
+      return (
+        <div className="container-cy py-32 text-center">
+          <p role="alert" className="text-ink/80">
+            {error}
+          </p>
+          <Button variant="glass" asChild className="mt-6">
+            <Link to="/collection">
+              <ArrowLeft aria-hidden="true" />
+              Back to the collection
+            </Link>
+          </Button>
+        </div>
+      )
+    }
+    return <NotFound />
+  }
 
   return (
-    <div className="container-cy pb-20">
-      <Link
-        to="/#shop"
-        className="mb-7 mt-7 inline-flex items-center gap-2 text-[0.85rem] font-medium uppercase tracking-[0.08em] text-muted no-underline hover:text-ink"
-      >
-        <ArrowLeft size={18} strokeWidth={2} aria-hidden="true" />
-        Back to shop
-      </Link>
+    <div className="container-cy py-10 md:py-16">
+      <Button variant="ghost" asChild className="-ml-3">
+        <Link to="/collection">
+          <ArrowLeft aria-hidden="true" />
+          All pieces
+        </Link>
+      </Button>
 
-      <div className="grid items-start gap-10 lg:grid-cols-[1.1fr_1fr] lg:gap-14">
-        <div className="relative">
-          <motion.div
-            aria-hidden="true"
-            data-testid="color-glow"
-            className="absolute inset-4 rounded-lg blur-3xl"
-            style={{ opacity: 0.3 }}
-            initial={false}
-            animate={{ backgroundColor: selectedColorHex }}
-            transition={{ duration: 0.6, ease: 'easeOut' }}
-          />
-          <div className="glass glass-ring glass-sheen relative aspect-[4/5] overflow-hidden rounded-lg bg-white/40">
-            <img
-              src={productImage(product)}
-              alt={`${product.name} from the CY Studio collection`}
-              width={1600}
-              height={2000}
-              className="h-full w-full object-cover"
-            />
-          </div>
-        </div>
+      <div className="mt-7 grid gap-10 lg:grid-cols-[26rem_1fr] lg:gap-12">
+        <motion.div initial="hidden" animate="visible" variants={fadeUp}>
+          <ProductGallery images={product.images} name={product.name} priority />
+        </motion.div>
 
-        <div className="glass glass-ring glass-sheen rounded-lg p-6 md:p-8 lg:sticky lg:top-24">
-          <span className="inline-block rounded-pill border border-white/60 bg-white/40 px-3 py-1 text-[0.72rem] uppercase tracking-[0.14em] text-ink">
-            The Collection
-          </span>
-          <h1 className="mt-4 text-[clamp(1.7rem,3vw,2.2rem)] font-semibold tracking-[-0.01em]">
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={fadeUp}
+          className="flex flex-col justify-center"
+        >
+          <motion.p
+            variants={fadeUp}
+            className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-clay-deep"
+          >
+            {product.brand}
+          </motion.p>
+
+          <motion.h1
+            variants={fadeUp}
+            className="mt-3 font-display text-[clamp(2rem,5vw,2.9rem)] font-semibold leading-[1.05] tracking-[-0.03em] text-ink"
+          >
             {product.name}
-          </h1>
-          <p className="mt-2 text-[1.35rem] font-semibold">{peso(product.price)}</p>
-          <p className="mb-8 mt-5 text-ink/80">{product.description}</p>
+          </motion.h1>
 
-          <div className="mb-7">
-            <p className="mb-3 text-[0.78rem] uppercase tracking-[0.1em] text-ink/70">
-              Colour — <span className="font-semibold text-ink">{color}</span>
+          <motion.p variants={fadeUp} className="mt-4 text-[1.5rem] font-semibold text-ink">
+            {formatPrice(product.price)}
+          </motion.p>
+
+          {/* Every product in the catalogue has an empty description, so the
+              paragraph is omitted rather than leaving a gap in the layout. */}
+          {product.description && (
+            <motion.p
+              variants={fadeUp}
+              className="mt-5 max-w-[46ch] text-[1rem] leading-relaxed text-ink/80"
+            >
+              {product.description}
+            </motion.p>
+          )}
+
+          <motion.p variants={fadeUp} className="mt-4 text-[0.8rem] text-muted">
+            {product.images.length} {product.images.length === 1 ? 'photo' : 'photos'}
+          </motion.p>
+
+          <motion.div variants={fadeUp} className="mt-9">
+            <InstagramLink href={INSTAGRAM_URL} name={product.name}>
+              <Button variant="accent" className="w-full min-h-12 px-6 sm:w-auto">
+                Ask about this on Instagram
+              </Button>
+            </InstagramLink>
+            <p className="mt-3 text-[0.8rem] text-muted">
+              Availability and shipping are confirmed on Instagram.
             </p>
-            <ColorPicker colors={product.colors} value={color} onChange={setColor} />
-          </div>
-
-          <div className="mb-7">
-            <p className="mb-3 text-[0.78rem] uppercase tracking-[0.1em] text-ink/70">
-              Size — <span className="font-semibold text-ink">{size}</span>
-            </p>
-            <SizePicker sizes={product.sizes} value={size} onChange={setSize} />
-          </div>
-
-          <AddToBagButton product={product} size={size} color={color} />
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
-
-      <section aria-labelledby="related-title" className="mt-20">
-        <h2 id="related-title" className="section-title">
-          You may also like
-        </h2>
-        <ul className="mt-11 grid list-none grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
-          {related.map(p => (
-            <ProductCard key={p.id} product={p} />
-          ))}
-        </ul>
-      </section>
     </div>
   )
 }
