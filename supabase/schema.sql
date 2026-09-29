@@ -92,6 +92,27 @@
 -- Check it is still off. It is one toggle and it is the whole perimeter.
 
 -- ---------------------------------------------------------------------------
+-- Triggers: there was a broken one, and it has been removed
+-- ---------------------------------------------------------------------------
+-- An earlier version of this file created a BEFORE UPDATE trigger that assigns
+-- NEW.updated_at. This table has no updated_at column, so that trigger could
+-- never succeed: every UPDATE raised
+--   record "new" has no field "updated_at"
+-- and editing a product in /admin failed. INSERT was unaffected, which is what
+-- made it look like an RLS or permissions problem rather than a broken trigger.
+--
+-- Removed by supabase/fix-updated-at-trigger.sql, which finds the trigger by
+-- matching its function body rather than by name. The orphaned
+-- public.touch_updated_at() function was left in place: dead, but harmless, and
+-- dropping it would fail if anything else referenced it.
+--
+-- The reason it got installed at all: `create table if not exists` was a no-op
+-- against an existing table, but the trigger DDL underneath it was not guarded by
+-- table existence, so running this file against a database whose table already
+-- existed applied the trigger anyway. This file is now a record rather than a
+-- script, precisely so that it cannot.
+
+-- ---------------------------------------------------------------------------
 -- Storage
 -- ---------------------------------------------------------------------------
 -- 440 photos already live in the public `product-images` bucket, addressed as

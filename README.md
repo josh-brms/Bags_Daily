@@ -102,9 +102,14 @@ This is deliberate — a missing env var should never take the site down.
 1. Create a project at <https://supabase.com>.
 2. The table, the RLS policies, and the `product-images` bucket already exist —
    see [The table was not made here](#the-table-was-not-made-here). Nothing to run.
-3. **Project Settings → API** for the URL and anon key. Add both to `.env.local`
+3. **Run [`supabase/fix-updated-at-trigger.sql`](supabase/fix-updated-at-trigger.sql)**
+   once. A `BEFORE UPDATE` trigger on the table assigns `NEW.updated_at`, which
+   this table does not have, so every product edit failed with *"record "new" has
+   no field "updated_at""* while adding a new product still worked. Nothing in the
+   app reads `updated_at`; the trigger only ever got in the way.
+4. **Project Settings → API** for the URL and anon key. Add both to `.env.local`
    (see [`.env.example`](.env.example)).
-4. **Authentication → Sign In / Up → Email** — create one account for yourself,
+5. **Authentication → Sign In / Up → Email** — create one account for yourself,
    then turn **Allow new users to sign up** OFF. Re-check it periodically; it is
    the entire security boundary.
 
