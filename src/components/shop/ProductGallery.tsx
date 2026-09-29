@@ -93,12 +93,18 @@ export default function ProductGallery({ images, name, priority = false }: Produ
 
         {many && (
           <>
+            {/*
+              Hidden until hovered, but only where hovering is possible. On a
+              touch screen there is no hover, so a plain group-hover rule left
+              these controls invisible and unreachable. The arbitrary variant
+              keeps them on phones and still gets out of the way on a mouse.
+            */}
             <CarouselPrevious
-              className="glass-dark left-4 border-0 opacity-0 transition-opacity group-hover/gallery:opacity-100 focus-visible:opacity-100"
+              className="glass-dark left-4 border-0 opacity-100 transition-opacity [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover/gallery:opacity-100 focus-visible:opacity-100"
               aria-label="Previous photo"
             />
             <CarouselNext
-              className="glass-dark right-4 border-0 opacity-0 transition-opacity group-hover/gallery:opacity-100 focus-visible:opacity-100"
+              className="glass-dark right-4 border-0 opacity-100 transition-opacity [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover/gallery:opacity-100 focus-visible:opacity-100"
               aria-label="Next photo"
             />
             <p

@@ -95,6 +95,9 @@ export default function TotePlayground() {
       className="relative z-10 py-20"
     >
       <div className="container-cy">
+        {/* min-w-0 on both items: grid items default to min-width:auto, so the
+            tote's intrinsic width was setting the track wider than the container
+            and pushing the glass panel off a 320px screen. */}
         <div className="grid items-center gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
           {/* Copy sits on a soft glass panel. The 3D backdrop is a fixed layer, so
               shapes drift behind this text as the page scrolls — a panel makes
@@ -104,7 +107,7 @@ export default function TotePlayground() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.5 }}
             transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-            className="glass glass-ring rounded-2xl p-7 md:p-9"
+            className="glass glass-ring min-w-0 rounded-2xl p-7 md:p-9"
           >
             <h2
               id="tote-title"
@@ -153,7 +156,7 @@ export default function TotePlayground() {
           </motion.div>
 
           {/* Tote */}
-          <div className="flex justify-center">
+          <div className="flex min-w-0 justify-center">
             <motion.div
               ref={toteRef}
               data-testid="tote-playground"
@@ -173,8 +176,8 @@ export default function TotePlayground() {
               style={{ touchAction: reduced ? 'auto' : 'none' }}
               className={
                 reduced
-                  ? 'aspect-square w-[min(88vw,440px)]'
-                  : 'aspect-square w-[min(88vw,440px)] cursor-grab active:cursor-grabbing'
+                  ? 'aspect-square w-full max-w-[440px]'
+                  : 'aspect-square w-full max-w-[440px] cursor-grab active:cursor-grabbing'
               }
             >
               <ToteDrawing

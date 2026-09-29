@@ -122,7 +122,7 @@ export default function FeaturedCarousel({ products }: { products: Product[] }) 
           </div>
 
           {snapCount > 1 && (
-            <div className="mt-6 flex items-center justify-center gap-2">
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-1">
               {Array.from({ length: snapCount }).map((_, i) => (
                 <button
                   key={i}
@@ -130,12 +130,19 @@ export default function FeaturedCarousel({ products }: { products: Product[] }) 
                   aria-label={`Go to slide ${i + 1}`}
                   aria-current={i === selected}
                   onClick={() => api?.scrollTo(i)}
-                  className={
-                    i === selected
-                      ? 'h-2 w-7 rounded-pill bg-clay transition-all duration-300'
-                      : 'h-2 w-2 rounded-pill bg-ink/20 transition-all duration-300 hover:bg-ink/40'
-                  }
-                />
+                  // The dot stays 8px tall so the row reads as a hairline, but
+                  // the button is 44x44: an 8x8 target is untappable on a phone.
+                  className="grid h-11 w-11 shrink-0 place-items-center"
+                >
+                  <span
+                    aria-hidden="true"
+                    className={
+                      i === selected
+                        ? 'h-2 w-7 rounded-pill bg-clay transition-all duration-300'
+                        : 'h-2 w-2 rounded-pill bg-ink/35 transition-all duration-300 hover:bg-ink/60'
+                    }
+                  />
+                </button>
               ))}
             </div>
           )}

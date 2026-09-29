@@ -67,7 +67,15 @@ export default function Product() {
       </Button>
 
       <div className="mt-7 grid gap-10 lg:grid-cols-[26rem_1fr] lg:gap-12">
-        <motion.div initial="hidden" animate="visible" variants={fadeUp}>
+        {/*
+          min-w-0 on BOTH items is the fix, not a nicety. Grid items default to
+          min-width:auto, which refuses to shrink below the content's min-content
+          width — and the gallery is a flex row of up to 38 shrink-0 slides. Left
+          alone, the item measured 572px inside a 342px track at 390px wide, so
+          the photo and its thumbnails ran off the right edge and the next arrow
+          landed off-screen entirely.
+        */}
+        <motion.div initial="hidden" animate="visible" variants={fadeUp} className="min-w-0">
           <ProductGallery images={product.images} name={product.name} priority />
         </motion.div>
 
@@ -75,7 +83,7 @@ export default function Product() {
           initial="hidden"
           animate="visible"
           variants={fadeUp}
-          className="flex flex-col justify-center"
+          className="flex min-w-0 flex-col justify-center"
         >
           <motion.p
             variants={fadeUp}
